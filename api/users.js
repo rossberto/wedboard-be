@@ -1,8 +1,10 @@
 const express = require('express');
-const mysql = require('mysql');
+
+const db = require('../db/database');
+//const mysql = require('mysql');
 
 const usersRouter = express.Router();
-
+/*
 const db = mysql.createConnection({
   host    : 'localhost',
   user    : 'root',
@@ -15,7 +17,7 @@ db.connect(function(err) {
 
   console.log("Connected!");
 });
-
+*/
 /***** Auxiliar Functions *****/
 function validateUser(req, res, next) {
   const user = req.body.user;
@@ -31,19 +33,16 @@ function validateUser(req, res, next) {
 
 function getUserValues(req, res, next) {
   const user = req.body.user;
+
+  const values = [[
+    user.name,
+    user.lastName,
+    user.email,
+    user.type,
+    user.joinDate
+  ]];
+  
 /*
-  const values = {
-    $name: user.name,
-    $lastName: user.position,
-    $email: user.wage,
-    $type: user.type,
-    $joinDate: user.joinDate
-  };
-
-  if (req.userId) {
-    values.$id = req.userId;
-  }
-
   if (user.birthdate) {
     values.$birthdate = user.birthdate;
   }
@@ -60,7 +59,7 @@ function getUserValues(req, res, next) {
     values.$token = user.token;
   }
 */
-  const values = [[user.name, user.lastName, user.email, user.type, user.joinDate]];
+
 
   req.values = values;
   next();
@@ -74,7 +73,6 @@ usersRouter.get('/', (req, res, next) => {
   db.query(sql, function(err, users) {
     if (err) {next(err)}
 
-    db.end()
     res.status(200).send(users);
   });
 });
@@ -97,10 +95,69 @@ usersRouter.post('/', validateUser, getUserValues, (req, res, next) => {
     db.query(sql, [result.insertId], function(err, insertedUser) {
       if (err) {next(err)}
 
-      db.end();
       res.status(201).send({user: insertedUser[0]});
     });
   });
 });
 
+
+usersRouter.param('userId', (req, res, next, userId) => {
+  const sql = `SELECT * FROM Users WHERE id=${userId}`;
+
+  console.log(sql);
+
+  db.query(sql, (err, user) => {
+    if (err) {next(err)}
+
+    console.log(user);
+
+    if (user) {
+      req.userId = userId;
+      req.user = user[0];
+      next();
+    } else {
+      res.status(404).send();
+    }
+  });
+});
+
+usersRouter.get('/:userId', (req, res, next) => {
+  res.status(200).send({user: req.user});
+});
+/*
+usersRouter.put('/:employeeId', validateUser, getUserValues, (req, res, next) => {
+  const updatedUser = req.body.user;
+
+  const sql = 'UPDATE Users SET ' +
+              'name=$name, ' +
+              'position=$position, ' +
+              'wage=$wage ' +
+              'WHERE id=$id';
+  db.run(sql, req.values, function(err) {
+    if (err) {next(err)}
+
+    db.get(`SELECT * FROM Employee WHERE id=${req.employeeId}`, (err, row) => {
+      if (err) {next(err)}
+
+      res.send({employee: row});
+    });
+
+  });
+});
+
+usersRouter.delete('/:employeeId', (req, res, next) => {
+  const sql = 'UPDATE Employee ' +
+              'SET is_current_employee=0 ' +
+              'WHERE id=$id';
+  db.run(sql, {$id: req.employeeId}, err => {
+    if (err) {next(err)}
+
+    db.get(`SELECT * FROM Employee WHERE id=${req.employeeId}`, (err, row) => {
+      if (err) {next(err)}
+
+      res.send({employee: row});
+    });
+  });
+});
+*/
 module.exports = usersRouter;
