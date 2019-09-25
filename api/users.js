@@ -34,32 +34,32 @@ function validateUser(req, res, next) {
 function getUserValues(req, res, next) {
   const user = req.body.user;
 
+  if (!user.lastName2) {
+    user.lastName2 = null;
+  }
+  if (!user.birthdate) {
+    user.birthdate = null;
+  }
+
+  if (!user.gender) {
+    user.gender = null;
+  }
+
+  if (!user.phone) {
+    user.phone = null;
+  }
+
   const values = [[
     user.name,
     user.lastName,
+    user.lastName2,
     user.email,
     user.type,
-    user.joinDate
+    user.joinDate,
+    user.birthdate,
+    user.gender,
+    user.phone
   ]];
-  
-/*
-  if (user.birthdate) {
-    values.$birthdate = user.birthdate;
-  }
-
-  if (user.gender) {
-    values.$gender = user.gender;
-  }
-
-  if (user.phone) {
-    values.$phone = user.phone;
-  }
-
-  if (user.token) {
-    values.$token = user.token;
-  }
-*/
-
 
   req.values = values;
   next();
@@ -80,8 +80,9 @@ usersRouter.get('/', (req, res, next) => {
 usersRouter.post('/', validateUser, getUserValues, (req, res, next) => {
   console.log('POST Users fetched');
 
-  let sql = 'INSERT INTO Users (name, last_name, email, type, join_date) ' +
-            'VALUES ?';
+  let sql = 'INSERT INTO Users (name, last_name, last_name_2, email, ' +
+            'type, join_date, birthdate, gender, phone) VALUES ?';
+
   console.log(req.values);
   db.query(sql, [req.values], function(err, result) {
     if (err) {next(err)}
@@ -124,40 +125,45 @@ usersRouter.param('userId', (req, res, next, userId) => {
 usersRouter.get('/:userId', (req, res, next) => {
   res.status(200).send({user: req.user});
 });
-/*
-usersRouter.put('/:employeeId', validateUser, getUserValues, (req, res, next) => {
+
+usersRouter.put('/:userId', validateUser, getUserValues, (req, res, next) => {
   const updatedUser = req.body.user;
 
   const sql = 'UPDATE Users SET ' +
-              'name=$name, ' +
-              'position=$position, ' +
-              'wage=$wage ' +
-              'WHERE id=$id';
-  db.run(sql, req.values, function(err) {
+              'name= ? , ' +
+              'last_name= ? , ' +
+              'last_name_2= ? , ' +
+              'email= ? , ' +
+              'type= ? , ' +
+              'join_date= ? , ' +
+              'birthdate= ? , ' +
+              'gender= ? , ' +
+              'phone= ? ' +
+              `WHERE id=${req.userId}`;
+  db.query(sql, req.values[0], function(err) {
     if (err) {next(err)}
 
-    db.get(`SELECT * FROM Employee WHERE id=${req.employeeId}`, (err, row) => {
+    db.query(`SELECT * FROM Users WHERE id=${req.userId}`, (err, user) => {
       if (err) {next(err)}
 
-      res.send({employee: row});
-    });
-
-  });
-});
-
-usersRouter.delete('/:employeeId', (req, res, next) => {
-  const sql = 'UPDATE Employee ' +
-              'SET is_current_employee=0 ' +
-              'WHERE id=$id';
-  db.run(sql, {$id: req.employeeId}, err => {
-    if (err) {next(err)}
-
-    db.get(`SELECT * FROM Employee WHERE id=${req.employeeId}`, (err, row) => {
-      if (err) {next(err)}
-
-      res.send({employee: row});
+      res.send({user: user[0]});
     });
   });
 });
-*/
+
+usersRouter.delete('/:userId', (req, res, next) => {
+  const sql = 'UPDATE Users ' +
+              'SET is_forbidden=1 ' +
+              `WHERE id=${req.userId}`;
+  db.query(sql, err => {
+    if (err) {next(err)}
+
+    db.query(`SELECT * FROM Users WHERE id=${req.userId}`, (err, user) => {
+      if (err) {next(err)}
+
+      res.send({user: user[0]});
+    });
+  });
+});
+
 module.exports = usersRouter;

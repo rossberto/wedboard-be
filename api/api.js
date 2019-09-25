@@ -6,5 +6,6 @@ const providersRouter = require('./providers');
 const projectsRouter = require('./projects');
 
 apiRouter.use('/users', usersRouter);
+//apiRouter.use('/providers', providersRouter);
 
 module.exports = apiRouter;
