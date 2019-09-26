@@ -69,11 +69,10 @@ usersRouter.get('/', (req, res, next) => {
   console.log('GET Users fetched');
 
   const sql = 'SELECT * FROM Users';
-
   db.query(sql, function(err, users) {
     if (err) {next(err)}
 
-    res.status(200).send(users);
+    res.status(200).send({users: users});
   });
 });
 
@@ -82,17 +81,13 @@ usersRouter.post('/', validateUser, getUserValues, (req, res, next) => {
 
   let sql = 'INSERT INTO Users (name, last_name, last_name_2, email, ' +
             'type, join_date, birthdate, gender, phone) VALUES ?';
-
-  console.log(req.values);
   db.query(sql, [req.values], function(err, result) {
     if (err) {next(err)}
 
     console.log(result);
-
     console.log("Number of records inserted: " + result.affectedRows);
 
     sql = 'SELECT * FROM Users WHERE id= ? LIMIT 1';
-
     db.query(sql, [result.insertId], function(err, insertedUser) {
       if (err) {next(err)}
 
@@ -104,9 +99,6 @@ usersRouter.post('/', validateUser, getUserValues, (req, res, next) => {
 
 usersRouter.param('userId', (req, res, next, userId) => {
   const sql = `SELECT * FROM Users WHERE id=${userId}`;
-
-  console.log(sql);
-
   db.query(sql, (err, user) => {
     if (err) {next(err)}
 
@@ -123,10 +115,14 @@ usersRouter.param('userId', (req, res, next, userId) => {
 });
 
 usersRouter.get('/:userId', (req, res, next) => {
+  console.log('GET specific User fetched');
+
   res.status(200).send({user: req.user});
 });
 
 usersRouter.put('/:userId', validateUser, getUserValues, (req, res, next) => {
+  console.log('UPDATE specific User fetched');
+
   const updatedUser = req.body.user;
 
   const sql = 'UPDATE Users SET ' +
@@ -152,6 +148,7 @@ usersRouter.put('/:userId', validateUser, getUserValues, (req, res, next) => {
 });
 
 usersRouter.delete('/:userId', (req, res, next) => {
+  console.log('DELETE specific User fetched');
   const sql = 'UPDATE Users ' +
               'SET is_forbidden=1 ' +
               `WHERE id=${req.userId}`;
