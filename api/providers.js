@@ -22,8 +22,8 @@ db.connect(function(err) {
 function validateProvider(req, res, next) {
   const provider = req.body.provider;
 
-  if (provider.name && provider.country && provider.email &&
-      provider.type && provider.joinDate)
+  if (provider.name  && provider.country &&
+      provider.state && provider.city)
   {
     next();
   } else {
@@ -31,34 +31,39 @@ function validateProvider(req, res, next) {
   }
 }
 
-function getproviderValues(req, res, next) {
+function getProviderValues(req, res, next) {
   const provider = req.body.provider;
 
-  if (!provider.lastName2) {
-    provider.lastName2 = null;
+  if (!provider.zipCode) {
+    provider.zipCode = null;
   }
-  if (!provider.birthdate) {
-    provider.birthdate = null;
+  if (!provider.address) {
+    provider.address = null;
   }
 
-  if (!provider.gender) {
-    provider.gender = null;
+  if (!provider.addressOptional) {
+    provider.addressOptional = null;
   }
 
   if (!provider.phone) {
     provider.phone = null;
   }
 
+  if (!provider.webPage) {
+    provider.webPage = null;
+  }
+
   const values = [[
     provider.name,
-    provider.lastName,
-    provider.lastName2,
-    provider.email,
-    provider.type,
-    provider.joinDate,
-    provider.birthdate,
-    provider.gender,
-    provider.phone
+    provider.isActive,
+    provider.country,
+    provider.state,
+    provider.city,
+    provider.zipCode,
+    provider.address,
+    provider.addressOptional,
+    provider.phone,
+    provider.webPage
   ]];
 
   req.values = values;
@@ -68,7 +73,7 @@ function getproviderValues(req, res, next) {
 providersRouter.get('/', (req, res, next) => {
   console.log('GET providers fetched');
 
-  const sql = 'SELECT * FROM providers';
+  const sql = 'SELECT * FROM Providers';
   db.query(sql, function(err, providers) {
     if (err) {next(err)}
 
@@ -76,29 +81,29 @@ providersRouter.get('/', (req, res, next) => {
   });
 });
 
-providersRouter.post('/', validateprovider, getproviderValues, (req, res, next) => {
+providersRouter.post('/', validateProvider, getProviderValues, (req, res, next) => {
   console.log('POST providers fetched');
 
-  let sql = 'INSERT INTO providers (name, last_name, last_name_2, email, ' +
-            'type, join_date, birthdate, gender, phone) VALUES ?';
+  let sql = 'INSERT INTO Providers (name, is_active, country, state, city, ' +
+            'zip_code, address, address_optional, phone, web_page) VALUES ?';
   db.query(sql, [req.values], function(err, result) {
     if (err) {next(err)}
 
     console.log(result);
     console.log("Number of records inserted: " + result.affectedRows);
 
-    sql = 'SELECT * FROM providers WHERE id= ? LIMIT 1';
-    db.query(sql, [result.insertId], function(err, insertedprovider) {
+    sql = 'SELECT * FROM Providers WHERE id= ? LIMIT 1';
+    db.query(sql, [result.insertId], function(err, insertedProvider) {
       if (err) {next(err)}
 
-      res.status(201).send({provider: insertedprovider[0]});
+      res.status(201).send({provider: insertedProvider[0]});
     });
   });
 });
 
 
 providersRouter.param('providerId', (req, res, next, providerId) => {
-  const sql = `SELECT * FROM providers WHERE id=${providerId}`;
+  const sql = `SELECT * FROM Providers WHERE id=${providerId}`;
   db.query(sql, (err, provider) => {
     if (err) {next(err)}
 
@@ -120,26 +125,27 @@ providersRouter.get('/:providerId', (req, res, next) => {
   res.status(200).send({provider: req.provider});
 });
 
-providersRouter.put('/:providerId', validateprovider, getproviderValues, (req, res, next) => {
+providersRouter.put('/:providerId', validateProvider, getProviderValues, (req, res, next) => {
   console.log('UPDATE specific provider fetched');
 
-  const updatedprovider = req.body.provider;
+  const updatedProvider = req.body.provider;
 
-  const sql = 'UPDATE providers SET ' +
+  const sql = 'UPDATE Providers SET ' +
               'name= ? , ' +
-              'last_name= ? , ' +
-              'last_name_2= ? , ' +
-              'email= ? , ' +
-              'type= ? , ' +
-              'join_date= ? , ' +
-              'birthdate= ? , ' +
-              'gender= ? , ' +
+              'is_active= ? , ' +
+              'country= ? , ' +
+              'state= ? , ' +
+              'city= ? , ' +
+              'zip_code= ? , ' +
+              'address= ? , ' +
+              'address_optional= ? , ' +
               'phone= ? ' +
+              'web_page= ? ' +
               `WHERE id=${req.providerId}`;
   db.query(sql, req.values[0], function(err) {
     if (err) {next(err)}
 
-    db.query(`SELECT * FROM providers WHERE id=${req.providerId}`, (err, provider) => {
+    db.query(`SELECT * FROM Providers WHERE id=${req.providerId}`, (err, provider) => {
       if (err) {next(err)}
 
       res.send({provider: provider[0]});
@@ -149,13 +155,14 @@ providersRouter.put('/:providerId', validateprovider, getproviderValues, (req, r
 
 providersRouter.delete('/:providerId', (req, res, next) => {
   console.log('DELETE specific provider fetched');
+
   const sql = 'UPDATE providers ' +
-              'SET is_forbidden=1 ' +
+              'SET is_active=0 ' +
               `WHERE id=${req.providerId}`;
   db.query(sql, err => {
     if (err) {next(err)}
 
-    db.query(`SELECT * FROM providers WHERE id=${req.providerId}`, (err, provider) => {
+    db.query(`SELECT * FROM Providers WHERE id=${req.providerId}`, (err, provider) => {
       if (err) {next(err)}
 
       res.send({provider: provider[0]});

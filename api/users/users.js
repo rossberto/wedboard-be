@@ -1,23 +1,8 @@
 const express = require('express');
-
-const db = require('../db/database');
-//const mysql = require('mysql');
+const db = require('../../db/database');
 
 const usersRouter = express.Router();
-/*
-const db = mysql.createConnection({
-  host    : 'localhost',
-  user    : 'root',
-  password: 'contrasena',
-  database: 'mydb'
-});
 
-db.connect(function(err) {
-  if (err) throw err;
-
-  console.log("Connected!");
-});
-*/
 /***** Auxiliar Functions *****/
 function validateUser(req, res, next) {
   const user = req.body.user;
@@ -64,7 +49,9 @@ function getUserValues(req, res, next) {
   req.values = values;
   next();
 }
+/***** End of Auxiliar Functions *****/
 
+/***** User Routes *****/
 usersRouter.get('/', (req, res, next) => {
   console.log('GET Users fetched');
 
@@ -104,7 +91,7 @@ usersRouter.param('userId', (req, res, next, userId) => {
 
     console.log(user);
 
-    if (user) {
+    if (user[0]) {
       req.userId = userId;
       req.user = user[0];
       next();
@@ -122,8 +109,6 @@ usersRouter.get('/:userId', (req, res, next) => {
 
 usersRouter.put('/:userId', validateUser, getUserValues, (req, res, next) => {
   console.log('UPDATE specific User fetched');
-
-  const updatedUser = req.body.user;
 
   const sql = 'UPDATE Users SET ' +
               'name= ? , ' +
@@ -149,6 +134,7 @@ usersRouter.put('/:userId', validateUser, getUserValues, (req, res, next) => {
 
 usersRouter.delete('/:userId', (req, res, next) => {
   console.log('DELETE specific User fetched');
+
   const sql = 'UPDATE Users ' +
               'SET is_forbidden=1 ' +
               `WHERE id=${req.userId}`;
@@ -161,6 +147,23 @@ usersRouter.delete('/:userId', (req, res, next) => {
       res.send({user: user[0]});
     });
   });
+});
+
+usersRouter.get('/:userId/details', (req, res, next) => {
+  console.log('GET user details fetched');
+
+  const type = req.user.type;
+  const sql = `SELECT * FROM ${type}Users WHERE Users_id=${req.userId}`;
+  db.query(sql, (err, details) => {
+    if (err) {next(err)}
+
+    if (details[0]) {
+      res.status(200).send({user: details[0]});
+    } else {
+      res.status(404).send();
+    }
+  });
+  console.log(sql);
 });
 
 module.exports = usersRouter;
