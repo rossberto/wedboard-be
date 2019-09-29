@@ -1,3 +1,10 @@
+/***** Project Services Routes *****/
+/*
+    GET /api/projects/:projectId/services
+    POST /api/projects/:projectId/services
+    GET /api/projects/:projectId/services/:serviceId
+    PUT /api/projects/:projectId/services/:serviceId
+*/
 const express = require('express');
 const db = require('../../db/database');
 
@@ -7,6 +14,8 @@ const mw = require('./middleware');
 const projectServicesRouter = express.Router();
 
 /***** project Routes *****/
+
+// GET /api/projects/:projectId/services
 projectServicesRouter.get('/', (req, res, next) => {
   const sql = `SELECT * FROM ProjectServices WHERE Projects_id=${req.projectId}` ;
   db.query(sql, function(err, services) {
@@ -18,7 +27,7 @@ projectServicesRouter.get('/', (req, res, next) => {
   });
 });
 
-
+// POST /api/projects/:projectId/services
 projectServicesRouter.post('/', mw.validateService, mw.getProjectServices, (req, res, next) => {
   let sql = 'INSERT INTO ProjectServices (WedboardServices_id, ' +
             'quantity, comments, comments_2, Projects_id) VALUES ?';
@@ -39,7 +48,8 @@ projectServicesRouter.post('/', mw.validateService, mw.getProjectServices, (req,
 });
 
 projectServicesRouter.param('serviceId', (req, res, next, serviceId) => {
-  const sql = `SELECT * FROM ProjectServices WHERE id=${serviceId}`;
+  const sql = `SELECT * FROM ProjectServices WHERE id=${serviceId} ` +
+              `AND Projects_id=${req.projectId}`;
   db.query(sql, function(err, service) {
     if (err) {
       next(err);
@@ -53,10 +63,12 @@ projectServicesRouter.param('serviceId', (req, res, next, serviceId) => {
   });
 });
 
+// GET /api/projects/:projectId/services/:serviceId
 projectServicesRouter.get('/:serviceId', (req, res, next) => {
   res.status(200).send({service: req.service});
 });
 
+// PUT /api/projects/:projectId/services/:serviceId
 projectServicesRouter.put('/:serviceId', mw.validateService, mw.getProjectServices, (req, res, next) => {
   const sql = 'UPDATE ProjectServices SET ' +
               'WedboardServices_id= ? , ' +
