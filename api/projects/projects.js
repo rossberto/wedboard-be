@@ -119,7 +119,7 @@ projectsRouter.delete('/:projectId', (req, res, next) => {
 */
 
 const projectServicesRouter = require('./projectServices.js');
-projectServicesRouter.use('/:projectId/services', projectServicesRouter);
+projectsRouter.use('/:projectId/services', projectServicesRouter);
 /*
 projectsRouter.get('/:projectId/details', (req, res, next) => {
   const type = req.project.type;

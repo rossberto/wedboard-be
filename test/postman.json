@@ -1,4 +1,4 @@
-// POST User
+// POST / PUT User
 {
 	"user": {
 		"name": "nombre",
@@ -11,7 +11,7 @@
     }
 }
 
-// POST User details
+// POST / PUT User details
 {
 	"type": "Planner",
 	"userDetails": {
@@ -32,7 +32,7 @@
 	}
 }
 
-// POST Project
+// POST / PUT Project
 {
 	"project": {
 		"creationTimestamp": "1982-06-22",
@@ -42,8 +42,18 @@
 	}
 }
 
-// POST Service
+// POST / PUT Service
 {
 	"service": "Nuevo servicio",
 	"category": "Categoria"
+}
+
+// POST / PUT Project Service
+{
+	"service": {
+		"wedboardServiceId": 1,
+		"quantity": 5,
+		"comments": "Comentarios",
+		"comments_2": "Mas Comentarios"
+	}
 }

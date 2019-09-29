@@ -180,10 +180,44 @@ function getSqlCommand(req, res, next) {
   }
 }
 
+function validateService(req, res, next) {
+  const service = req.body.service;
+
+  if (service.wedboardServiceId) {
+    next();
+  } else {
+    res.status(400).send();
+  }
+}
+
+function getProjectServices(req, res, next) {
+  const service = req.body.service;
+  let expectedValues = [
+    'wedboardServiceId',
+    'quantity',
+    'comments',
+    'comments2'
+  ];
+
+  expectedValues.forEach(value => {
+    if (!service[value]) {
+      service[value] = null;
+    }
+  });
+  service.projectId = req.projectId;
+
+  const values = Object.values(service);
+  req.values = [values];
+
+  next();
+}
+
 module.exports = {
   validateProject,
   getProjectValues,
   validateprojectDetails,
   getprojectDetails,
-  getSqlCommand
+  getSqlCommand,
+  validateService,
+  getProjectServices
 }
