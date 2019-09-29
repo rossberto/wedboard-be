@@ -246,6 +246,7 @@ CREATE TABLE IF NOT EXISTS `mydb`.`PlannerUsers` (
   `role` VARCHAR(254) NOT NULL,
   `Users_id` INT NOT NULL,
   PRIMARY KEY (`id`, `Users_id`),
+  UNIQUE INDEX `Users_id_UNIQUE` (`Users_id` ASC),
   CONSTRAINT `fk_PlannerUsers_Users1`
     FOREIGN KEY (`Users_id`)
     REFERENCES `mydb`.`Users` (`id`)
@@ -272,6 +273,7 @@ CREATE TABLE IF NOT EXISTS `mydb`.`CoupleUsers` (
   `partner_id` INT NULL,
   PRIMARY KEY (`id`, `Users_id`),
   INDEX `fk_CoupleUsers_Users2_idx` (`partner_id` ASC),
+  UNIQUE INDEX `Users_id_UNIQUE` (`Users_id` ASC),
   CONSTRAINT `fk_CoupleUsers_Users1`
     FOREIGN KEY (`Users_id`)
     REFERENCES `mydb`.`Users` (`id`)
@@ -296,6 +298,8 @@ CREATE TABLE IF NOT EXISTS `mydb`.`ProviderUsers` (
   `Providers_id` INT NULL,
   PRIMARY KEY (`id`, `Users_id`),
   INDEX `fk_ProviderUsers_Providers1_idx` (`Providers_id` ASC),
+  UNIQUE INDEX `Users_id_UNIQUE` (`Users_id` ASC),
+  UNIQUE INDEX `Providers_id_UNIQUE` (`Providers_id` ASC),
   CONSTRAINT `fk_ProviderUsers_Users1`
     FOREIGN KEY (`Users_id`)
     REFERENCES `mydb`.`Users` (`id`)

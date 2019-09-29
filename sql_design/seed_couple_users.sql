@@ -13,7 +13,7 @@ INSERT INTO CoupleUsers (nationality, residence_country, residence_city, occupat
 VALUES ("MXN", "MXN", "Merida", "Ingeniero", "Catolico", 0, "0F0F0F", "010302", "0A0B0C", 4, 1);
 
 INSERT INTO ProviderUsers (job_position, Users_id, Providers_id)
-VALUES ("Ventas", 5, 1);
+VALUES ("Ventas", 5, NULL);
 
-INSERT INTO ProviderUsers (job_position, Users_id, Providers_id) 
+INSERT INTO ProviderUsers (job_position, Users_id, NULL) 
 VALUES ("Atencion a clientes", 6, 2);

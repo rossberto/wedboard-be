@@ -1,0 +1,33 @@
+// POST User
+{
+	"user": {
+		"name": "nombre",
+        "lastName": "apellido",
+        "lastName2": "appellido2",
+        "email": "nombre@correo.com",
+        "type": "Planner",
+        "joinDate": "1984-06-06",
+        "phone": "+22"
+    }
+}
+
+// POST User details
+{
+	"type": "Planner",
+	"userDetails": {
+		"role": "Designer",
+		"isCurrentEmployee": 1
+	}
+}
+
+{
+	"type": "Couple",
+	"userDetails": {
+	}
+}
+
+{
+	"type": "Provider",
+	"userDetails": {
+	}
+}
