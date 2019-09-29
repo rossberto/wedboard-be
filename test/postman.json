@@ -41,3 +41,9 @@
 		"createdBy": 2
 	}
 }
+
+// POST Service
+{
+	"service": "Nuevo servicio",
+	"category": "Categoria"
+}
