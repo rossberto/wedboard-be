@@ -2,10 +2,10 @@ const express = require('express');
 const apiRouter = express.Router();
 
 const usersRouter = require('./users/users');
+const projectsRouter = require('./projects/projects');
 const providersRouter = require('./providers');
-const projectsRouter = require('./projects');
 
 apiRouter.use('/users', usersRouter);
-//apiRouter.use('/providers', providersRouter);
+apiRouter.use('/projects', projectsRouter);
 
 module.exports = apiRouter;

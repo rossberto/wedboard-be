@@ -31,3 +31,13 @@
 	"userDetails": {
 	}
 }
+
+// POST Project
+{
+	"project": {
+		"creationTimestamp": "1982-06-22",
+		"name": "Proyecto posteado 1",
+		"feastDate": "2015-08-10",
+		"createdBy": 2
+	}
+}
