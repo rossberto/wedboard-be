@@ -34,7 +34,6 @@ function getUserValues(req, res, next) {
   });
 
   const values = Object.values(user);
-  console.log(values);
   req.values = [values];
 
   next();
@@ -109,9 +108,7 @@ function getUserDetails(req, res, next) {
   });
   userDetails.userId = req.userId;
 
-  console.log(userDetails);
   const details = Object.values(userDetails);
-  console.log(details);
   req.details = [details];
 
   next();
@@ -144,7 +141,6 @@ function getSqlCommand(req, res, next) {
         next();
         break;
       case 'Planner':
-        console.log('A punto de asignar sql');
         req.sql = 'UPDATE PlannerUsers SET ' +
                     'role= ? , ' +
                     'is_current_employee= ? ' +
