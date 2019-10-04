@@ -57,3 +57,20 @@
 		"comments_2": "Mas Comentarios"
 	}
 }
+
+// POST / PUT Provider
+{
+	"provider": {
+	  "name": "Proveedor3",
+	  "isActive": 1,
+	  "country": "MXN",
+	  "state": "Jalisco",
+	  "city": "Zapopan",
+	  "joinDate": "2017-01-01T06:00:00.000Z",
+	  "zipCode": "97203",
+	  "address": "Cambio",
+	  "addressOptional": "Dir. opcional",
+	  "phone": "9998765433",
+	  "webPage": "pagina3.com"
+	}
+}
