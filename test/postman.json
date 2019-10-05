@@ -60,13 +60,13 @@
 
 // POST / PUT Provider
 {
-	"provider": {
+	"data": {
 	  "name": "Proveedor3",
 	  "isActive": 1,
 	  "country": "MXN",
 	  "state": "Jalisco",
 	  "city": "Zapopan",
-	  "joinDate": "2017-01-01T06:00:00.000Z",
+	  "joinDate": "2017-01-01T06:00:00.000",
 	  "zipCode": "97203",
 	  "address": "Cambio",
 	  "addressOptional": "Dir. opcional",

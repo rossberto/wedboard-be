@@ -18,7 +18,19 @@ function setDataRequirements(req, res, next) {
     'wedboardServiceId'
   ];
 
-  req.expectedData = [
+  req.expectedPostData = [
+    'name',
+    'description',
+    'descriptionOptional',
+    'minRange',
+    'maxRange',
+    'rangeUnit',
+    'price',
+    'providerServiceCode',
+    'wedboardServiceId'
+  ];
+
+  req.expectedUpdateData = [
     'name',
     'description',
     'descriptionOptional',
@@ -48,7 +60,7 @@ providerServicesRouter.get('/', (req, res, next) => {
 
 // Add a new service to provider's catalog
 // POST /api/providers/:providerId/services
-providerServicesRouter.post('/', setDataRequirements, mw.validateRequest, mw.getValues, (req, res, next) => {
+providerServicesRouter.post('/', setDataRequirements, mw.validatePostRequest, mw.getValues, (req, res, next) => {
   req.values[0].push(req.providerId);
 
   let sql = 'INSERT INTO ProviderServices (name, description, ' +
@@ -96,7 +108,7 @@ providerServicesRouter.get('/:serviceId', (req, res, next) => {
 
 
 // PUT /api/providers/:providerId/services/:serviceId
-providerServicesRouter.put('/:serviceId', setDataRequirements, mw.validateRequest, mw.getValues, (req, res, next) => {
+providerServicesRouter.put('/:serviceId', setDataRequirements, mw.getValues, (req, res, next) => {
   const sql = 'UPDATE ProviderServices SET ' +
               'name= ? , ' +
               'description= ? , ' +
@@ -136,8 +148,5 @@ providerServicesRouter.delete('/:serviceId', (req, res, next) => {
     }
   });
 });
-
-//const providerServicesRouter = require('./providerServices.js');
-//providerServicesRouter.use('/services', providerServicesRouter);
 
 module.exports = providerServicesRouter;

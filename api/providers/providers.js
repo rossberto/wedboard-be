@@ -2,9 +2,48 @@ const express = require('express');
 const db = require('../../db/database');
 
 // User's Middleware
-const mw = require('./middleware');
+const mw = require('../middleware');
 
 const providersRouter = express.Router();
+
+// Local Middleware
+function setDataRequirements(req, res, next) {
+  req.minimumRequestData = [
+    'name',
+    'country',
+    'state',
+    'city'
+  ];
+
+  req.expectedPostData = [
+    'name',
+    'isActive',
+    'country',
+    'state',
+    'city',
+    'joinDate',
+    'zipCode',
+    'address',
+    'addressOptional',
+    'phone',
+    'webPage'
+  ];
+
+  req.expectedUpdateData = [
+    'name',
+    'isActive',
+    'country',
+    'state',
+    'city',
+    'zipCode',
+    'address',
+    'addressOptional',
+    'phone',
+    'webPage'
+  ];
+
+  next();
+}
 
 // GET /api/providers
 providersRouter.get('/', (req, res, next) => {
@@ -19,7 +58,7 @@ providersRouter.get('/', (req, res, next) => {
 });
 
 // POST /api/providers
-providersRouter.post('/', mw.validateProvider, mw.getProviderValues, (req, res, next) => {
+providersRouter.post('/', setDataRequirements, mw.validatePostRequest, mw.getValues, (req, res, next) => {
   let sql = 'INSERT INTO Providers (name, is_active, country_iso_a3c, state, city, ' +
             'join_date, zip_code, address, address_optional, phone, web_page) VALUES ?';
   db.query(sql, [req.values], function(err, result) {
@@ -62,14 +101,13 @@ providersRouter.get('/:providerId', (req, res, next) => {
 });
 
 // PUT /api/providers/:providerId
-providersRouter.put('/:providerId', mw.validateProvider, mw.getProviderValues, (req, res, next) => {
+providersRouter.put('/:providerId', setDataRequirements, mw.getValues, (req, res, next) => {
   const sql = 'UPDATE Providers SET ' +
               'name= ? , ' +
               'is_active= ? , ' +
               'country_iso_a3c= ? , ' +
               'state= ? , ' +
               'city= ? , ' +
-              'join_date= ? , ' +
               'zip_code= ? , ' +
               'address= ? , ' +
               'address_optional= ? , ' +
