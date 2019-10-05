@@ -90,3 +90,14 @@
     "wedboardServicesId": 1
   }
 }
+
+// POST / PUT Project Orders
+{
+	"projects": {
+    "date": "2018-01-02T06:00:00.000Z",
+    "comments": "Comentarios",
+    "status": "testing",
+    "amount": 75320.78,
+    "providerId": 2
+  }
+}

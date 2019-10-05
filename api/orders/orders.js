@@ -1,23 +1,42 @@
 /***** Projects Routes *****/
 /*
-    GET /api/projects
-    POST /api/projects
-    GET /api/projects/:projectId
-    PUT /api/projects/:projectId
+    GET /api/projects/:projectId/orders
+    POST /api/projects/:projectId/orders
 */
 const express = require('express');
 const db = require('../../db/database');
 
 // project's Middleware
-const mw = require('./middleware');
+const mw = require('../middleware');
 
-const projectsRouter = express.Router();
+const ordersRouter = express.Router();
+
+// Local middleware
+function setDataRequirements(req, res, next) {
+  req.minimumRequestData = [
+    'date',
+    'status',
+    'amount',
+    'providerId'
+  ];
+
+  req.expectedData = [
+    'date',
+    'comments',
+    'status',
+    'amount',
+    'providerId'
+  ];
+
+  next();
+}
 
 /***** project Routes *****/
 
-// GET /api/projects
-projectsRouter.get('/', (req, res, next) => {
-  const sql = 'SELECT * FROM Projects';
+// GET /api/projects/:projectId/orders
+ordersRouter.get('/', (req, res, next) => {
+  console.log('En GET orders');
+  const sql = `SELECT * FROM Orders WHERE Projects_id=${req.projectId}`;
   db.query(sql, function(err, projects) {
     if (err) {
       next(err);
@@ -27,30 +46,29 @@ projectsRouter.get('/', (req, res, next) => {
   });
 });
 
-// POST /api/projects
-projectsRouter.post('/', mw.validateProject, mw.getProjectValues, (req, res, next) => {
-  let sql = 'INSERT INTO Projects (creation_timestamp, name, feast_date, created_by, ' +
-            ' feast_location, civil_ceremony_date, civil_ceremony_location, ' +
-            'religious_ceremony_date, religious_location, custom_ceremony_description, ' +
-            'custom_ceremony_description_2, custom_ceremony_date, custom_ceremony_location, ' +
-            'guests_quantity, pinterest_board_url) VALUES ?';
+// POST /api/projects/:projectId/orders
+ordersRouter.post('/', setDataRequirements, mw.validateRequest, mw.getValues, (req, res, next) => {
+  req.values[0].push(req.projectId);
+
+  let sql = 'INSERT INTO Orders (date, comments, status, amount, Providers_id, ' +
+            'Projects_id) VALUES ?';
   db.query(sql, [req.values], function(err, result) {
     if (err) {
       next(err);
     } else {
-      sql = 'SELECT * FROM Projects WHERE id= ? LIMIT 1';
-      db.query(sql, [result.insertId], function(err, insertedproject) {
+      sql = 'SELECT * FROM Orders WHERE id= ? LIMIT 1';
+      db.query(sql, [result.insertId], function(err, insertedOrder) {
         if (err) {
           next(err);
         } else {
-          res.status(201).send({project: insertedproject[0]});
+          res.status(201).send({order: insertedOrder[0]});
         }
       });
     }
   });
 });
-
-projectsRouter.param('projectId', (req, res, next, projectId) => {
+/*
+ordersRouter.param('projectId', (req, res, next, projectId) => {
   const sql = `SELECT * FROM Projects WHERE id=${projectId}`;
   db.query(sql, function(err, project) {
     if (err) {
@@ -66,12 +84,12 @@ projectsRouter.param('projectId', (req, res, next, projectId) => {
 });
 
 // GET /api/projects/:projectId
-projectsRouter.get('/:projectId', (req, res, next) => {
+ordersRouter.get('/:projectId', (req, res, next) => {
   res.status(200).send({project: req.project});
 });
 
 // PUT /api/projects/:projectId
-projectsRouter.put('/:projectId', mw.validateProject, mw.getProjectValues, (req, res, next) => {
+ordersRouter.put('/:projectId', mw.validateProject, mw.getProjectValues, (req, res, next) => {
   const sql = 'UPDATE Projects SET ' +
               'name= ? , ' +
               'feast_date= ? , ' +
@@ -111,9 +129,6 @@ projectsRouter.put('/:projectId', mw.validateProject, mw.getProjectValues, (req,
 });
 
 const projectServicesRouter = require('./projectServices.js');
-projectsRouter.use('/:projectId/services', projectServicesRouter);
-
-const ordersRouter = require('../orders/orders');
-projectsRouter.use('/:projectId/orders', ordersRouter);
-
-module.exports = projectsRouter;
+ordersRouter.use('/:projectId/services', projectServicesRouter);
+*/
+module.exports = ordersRouter;
