@@ -15,5 +15,5 @@ VALUES ("MXN", "MXN", "Merida", "Ingeniero", "Catolico", 0, "0F0F0F", "010302", 
 INSERT INTO ProviderUsers (job_position, Users_id, Providers_id)
 VALUES ("Ventas", 5, NULL);
 
-INSERT INTO ProviderUsers (job_position, Users_id, NULL) 
+INSERT INTO ProviderUsers (job_position, Users_id, Providers_id) 
 VALUES ("Atencion a clientes", 6, 2);

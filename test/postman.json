@@ -1,6 +1,6 @@
 // POST / PUT User
 {
-	"user": {
+	"data": {
 		"name": "nombre",
         "lastName": "apellido",
         "lastName2": "appellido2",

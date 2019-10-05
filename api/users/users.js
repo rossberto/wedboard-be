@@ -5,20 +5,58 @@
     GET /api/users/:userId
     PUT /api/users/:userId
     DELETE /api/users/:userId
-    GET /api/users/:userId/details
-    POST /api/users/:userId/details
-    PUT /api/users/:userId/details
 */
 const express = require('express');
 const db = require('../../db/database');
 
 // User's Middleware
-const mw = require('./middleware');
+const mw = require('../middleware');
 
 const usersRouter = express.Router();
 
-/***** User Routes *****/
+// Local Middleware
+function setDataRequirements(req, res, next) {
+  req.minimumRequestData = [
+    'name',
+    'lastName',
+    'email',
+    'type',
+    'joinDate'
+  ];
 
+  req.expectedPostData = [
+    'name',
+    'lastName',
+    'lastName2',
+    'email',
+    'type',
+    'joinDate',
+    'birthdate',
+    'gender',
+    'phone',
+    'token',
+    'isOnline',
+    'isForbidden'
+  ];
+
+  req.expectedUpdateData = [
+    'name',
+    'lastName',
+    'lastName2',
+    'email',
+    'type',
+    'birthdate',
+    'gender',
+    'phone',
+    'token',
+    'isOnline',
+    'isForbidden'
+  ];
+
+  next();
+}
+
+/***** User Routes *****/
 // GET /api/users
 usersRouter.get('/', (req, res, next) => {
   const sql = 'SELECT * FROM Users';
@@ -32,7 +70,7 @@ usersRouter.get('/', (req, res, next) => {
 });
 
 // POST /api/users
-usersRouter.post('/', mw.validateUser, mw.getUserValues, (req, res, next) => {
+usersRouter.post('/', setDataRequirements, mw.validatePostRequest, mw.getValues, (req, res, next) => {
   let sql = 'INSERT INTO Users (name, last_name, last_name_2, email, ' +
             'type, join_date, birthdate, gender, phone, ' +
             'token, is_online, is_forbidden) VALUES ?';
@@ -73,14 +111,13 @@ usersRouter.get('/:userId', (req, res, next) => {
 });
 
 // PUT /api/users/:userId
-usersRouter.put('/:userId', mw.validateUser, mw.getUserValues, (req, res, next) => {
+usersRouter.put('/:userId', setDataRequirements, mw.validatePostRequest, mw.getValues, (req, res, next) => {
   const sql = 'UPDATE Users SET ' +
               'name= ? , ' +
               'last_name= ? , ' +
               'last_name_2= ? , ' +
               'email= ? , ' +
               'type= ? , ' +
-              'join_date= ? , ' +
               'birthdate= ? , ' +
               'gender= ? , ' +
               'phone= ? ' +
@@ -120,57 +157,7 @@ usersRouter.delete('/:userId', (req, res, next) => {
   });
 });
 
-// GET /api/users/:userId/details
-usersRouter.get('/:userId/details', (req, res, next) => {
-  const type = req.user.type;
-  const sql = `SELECT * FROM ${type}Users WHERE Users_id=${req.userId}`;
-  db.query(sql, function(err, details) {
-    if (err) {
-      next(err);
-    } else if (details[0]) {
-      res.status(200).send({user: details[0]});
-    } else {
-      res.status(404).send();
-    }
-  });
-});
-
-// POST /api/users/:userId/details
-usersRouter.post('/:userId/details', mw.validateUserDetails, mw.getUserDetails, mw.getSqlCommand, (req, res, next) => {
-  db.query(req.sql, [req.details], function(err, result) {
-    if (err) {
-      next(err);
-    } else {
-      const type = req.user.type;
-      const sql = `SELECT * FROM ${type}Users WHERE id= ? LIMIT 1`;
-      db.query(sql, [result.insertId], function(err, insertedUserDetails) {
-        if (err) {
-          next(err);
-        } else {
-          res.status(201).send({userDetails: insertedUserDetails[0]});
-        }
-      });
-    }
-  });
-});
-
-// PUT /api/users/:userId/details
-usersRouter.put('/:userId/details', mw.validateUserDetails, mw.getUserDetails, mw.getSqlCommand, (req, res, next) => {
-  db.query(req.sql, req.details[0], function(err, result) {
-    if (err) {
-      next(err);
-    } else {
-      const type = req.user.type;
-      const sql = `SELECT * FROM ${type}Users WHERE Users_id=${req.userId}  LIMIT 1`;
-      db.query(sql, function(err, insertedUserDetails) {
-        if (err) {
-          next(err);
-        } else {
-          res.status(200).send({userDetails: insertedUserDetails[0]});
-        }
-      });
-    }
-  });
-});
+const userDetailsRouter = require('./userDetails');
+usersRouter.use('/:userId/details', userDetailsRouter);
 
 module.exports = usersRouter;
