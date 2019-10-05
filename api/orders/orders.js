@@ -47,7 +47,7 @@ ordersRouter.get('/', (req, res, next) => {
 });
 
 // POST /api/projects/:projectId/orders
-ordersRouter.post('/', setDataRequirements, mw.validateRequest, mw.getValues, (req, res, next) => {
+ordersRouter.post('/', setDataRequirements, mw.validatePostRequest, mw.getValues, (req, res, next) => {
   req.values[0].push(req.projectId);
 
   let sql = 'INSERT INTO Orders (date, comments, status, amount, Providers_id, ' +
@@ -90,7 +90,7 @@ ordersRouter.get('/:orderId', (req, res, next) => {
 });
 
 // PUT /api/projects/:projectId/orders/:orderId
-ordersRouter.put('/:orderId', setDataRequirements, mw.validateRequest, mw.getValues, (req, res, next) => {
+ordersRouter.put('/:orderId', setDataRequirements, mw.validatePostRequest, mw.getValues, (req, res, next) => {
   const sql = 'UPDATE Orders SET ' +
               'date= ? , ' +
               'comments= ? , ' +
@@ -125,8 +125,8 @@ ordersRouter.delete('/:orderId', (req, res, next) => {
     }
   });
 });
-/*
+
 const orderServicesRouter = require('./orderServices');
 ordersRouter.use('/:orderId/services', orderServicesRouter);
-*/
+
 module.exports = ordersRouter;

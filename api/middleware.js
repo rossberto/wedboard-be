@@ -1,4 +1,4 @@
-function validateRequest(req, res, next) {
+function validatePostRequest(req, res, next) {
   const request = req.body.data;
   const minimumData = req.minimumRequestData;
 
@@ -16,21 +16,30 @@ function validateRequest(req, res, next) {
 
 function getValues(req, res, next) {
   const request = req.body.data;
-  const expectedData = req.expectedData;
+  let expectedData = [];
+  if (req.method === 'POST') {
+    expectedData = req.expectedPostData;
+  } else if(req.method === 'PUT') {
+    expectedData = req.expectedUpdateData;
+  }
+
+  let reqData = {};
 
   expectedData.forEach(data => {
     if (!request[data]) {
-      request[data] = null;
+      reqData[data] = null;
+    } else {
+      reqData[data] = request[data];
     }
   });
 
-  const values = Object.values(request);
+  const values = Object.values(reqData);
   req.values = [values];
 
   next();
 }
 
 module.exports = {
-  validateRequest,
+  validatePostRequest,
   getValues
 }

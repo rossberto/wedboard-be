@@ -9,9 +9,32 @@ const express = require('express');
 const db = require('../../db/database');
 
 // project's Middleware
-const mw = require('./middleware');
+const mw = require('../middleware');
 
 const projectServicesRouter = express.Router();
+
+// Local middleware
+function setDataRequirements(req, res, next) {
+  req.minimumRequestData = [
+    'wedboardServiceId'
+  ];
+
+  req.expectedPostData = [
+    'wedboardServiceId',
+    'quantity',
+    'comments',
+    'comments2'
+  ];
+
+  req.expectedUpdateData = [
+    'wedboardServiceId',
+    'quantity',
+    'comments',
+    'comments2'
+  ];
+
+  next();
+}
 
 /***** project Routes *****/
 
@@ -28,10 +51,13 @@ projectServicesRouter.get('/', (req, res, next) => {
 });
 
 // POST /api/projects/:projectId/services
-projectServicesRouter.post('/', mw.validateService, mw.getProjectServices, (req, res, next) => {
+projectServicesRouter.post('/', setDataRequirements, mw.validatePostRequest, mw.getValues, (req, res, next) => {
+  req.values[0].push(req.projectId);
+  
   let sql = 'INSERT INTO ProjectServices (WedboardServices_id, ' +
             'quantity, comments, comments_2, Projects_id) VALUES ?';
   db.query(sql, [req.values], function(err, result) {
+    console.log(sql);
     if (err) {
       next(err);
     } else {
@@ -69,7 +95,7 @@ projectServicesRouter.get('/:serviceId', (req, res, next) => {
 });
 
 // PUT /api/projects/:projectId/services/:serviceId
-projectServicesRouter.put('/:serviceId', mw.validateService, mw.getProjectServices, (req, res, next) => {
+projectServicesRouter.put('/:serviceId', setDataRequirements, mw.getValues, (req, res, next) => {
   const sql = 'UPDATE ProjectServices SET ' +
               'WedboardServices_id= ? , ' +
               'quantity= ? , ' +

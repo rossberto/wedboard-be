@@ -34,7 +34,7 @@
 
 // POST / PUT Project
 {
-	"project": {
+	"data": {
 		"creationTimestamp": "1982-06-22",
 		"name": "Proyecto posteado 1",
 		"feastDate": "2015-08-10",
@@ -50,11 +50,11 @@
 
 // POST / PUT Project Service
 {
-	"service": {
+	"data": {
 		"wedboardServiceId": 1,
 		"quantity": 5,
 		"comments": "Comentarios",
-		"comments_2": "Mas Comentarios"
+		"comments2": "Mas Comentarios"
 	}
 }
 

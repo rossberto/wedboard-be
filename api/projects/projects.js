@@ -9,9 +9,56 @@ const express = require('express');
 const db = require('../../db/database');
 
 // project's Middleware
-const mw = require('./middleware');
+//const setDataRequirements = require('./requestRequirements');
+const mw = require('../middleware');
 
 const projectsRouter = express.Router();
+
+// Local Middleware
+function setDataRequirements(req, res, next) {
+  req.minimumRequestData = [
+    'creationTimestamp',
+    'name',
+    'feastDate',
+    'createdBy'
+  ];
+
+  req.expectedPostData = [
+    'creationTimestamp',
+    'name',
+    'feastDate',
+    'createdBy',
+    'feastLocation',
+    'civilCeremonyDate',
+    'civilCeremonyLocation',
+    'religiousCeremonyDate',
+    'religiousCeremonyLocation',
+    'customCeremonyDescription',
+    'customCeremonyDescription2',
+    'customCeremonyDate',
+    'customCeremonyLocation',
+    'guestsQuantity',
+    'pinterestBoardUrl'
+  ];
+
+  req.expectedUpdateData = [
+    'name',
+    'feastDate',
+    'feastLocation',
+    'civilCeremonyDate',
+    'civilCeremonyLocation',
+    'religiousCeremonyDate',
+    'religiousCeremonyLocation',
+    'customCeremonyDescription',
+    'customCeremonyDescription2',
+    'customCeremonyDate',
+    'customCeremonyLocation',
+    'guestsQuantity',
+    'pinterestBoardUrl'
+  ];
+
+  next();
+}
 
 /***** project Routes *****/
 
@@ -28,7 +75,7 @@ projectsRouter.get('/', (req, res, next) => {
 });
 
 // POST /api/projects
-projectsRouter.post('/', mw.validateProject, mw.getProjectValues, (req, res, next) => {
+projectsRouter.post('/', setDataRequirements, mw.validatePostRequest, mw.getValues, (req, res, next) => {
   let sql = 'INSERT INTO Projects (creation_timestamp, name, feast_date, created_by, ' +
             ' feast_location, civil_ceremony_date, civil_ceremony_location, ' +
             'religious_ceremony_date, religious_location, custom_ceremony_description, ' +
@@ -71,7 +118,7 @@ projectsRouter.get('/:projectId', (req, res, next) => {
 });
 
 // PUT /api/projects/:projectId
-projectsRouter.put('/:projectId', mw.validateProject, mw.getProjectValues, (req, res, next) => {
+projectsRouter.put('/:projectId', setDataRequirements, mw.getValues, (req, res, next) => {
   const sql = 'UPDATE Projects SET ' +
               'name= ? , ' +
               'feast_date= ? , ' +
@@ -89,11 +136,6 @@ projectsRouter.put('/:projectId', mw.validateProject, mw.getProjectValues, (req,
               `WHERE id=${req.projectId}`;
 
   const values = req.values[0];
-  // We take out non-modifiable values
-  // Quit creationTimestamp
-  values.splice(0,1);
-  // Quit createdBy
-  values.splice(2,1);
 
   db.query(sql, values, function(err) {
     if (err) {
