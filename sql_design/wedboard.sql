@@ -55,6 +55,7 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Projects` (
   `custom_ceremony_location` VARCHAR(254) NULL,
   `guests_quantity` INT NULL,
   `pinterest_board_url` VARCHAR(254) NULL,
+  `status` VARCHAR(45) NULL,
   `created_by` INT NOT NULL,
   PRIMARY KEY (`id`),
   INDEX `fk_Projects_Users1_idx` (`created_by` ASC),
@@ -176,7 +177,7 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Orders` (
   `date` DATETIME NOT NULL,
   `comments` VARCHAR(254) NULL,
   `status` VARCHAR(8) NOT NULL DEFAULT 'Quote',
-  `amount` DECIMAL NOT NULL,
+  `amount` DECIMAL(10,2) NOT NULL,
   `Projects_id` INT NOT NULL,
   `Providers_id` INT NOT NULL,
   PRIMARY KEY (`id`),
@@ -217,7 +218,7 @@ CREATE TABLE IF NOT EXISTS `mydb`.`ProviderServices` (
   `min_range` INT NOT NULL,
   `max_range` INT NOT NULL,
   `range_unit` VARCHAR(45) NOT NULL,
-  `price` DECIMAL NOT NULL,
+  `price` DECIMAL(10,2) NOT NULL,
   `provider_service_code` VARCHAR(45) NULL,
   `Providers_id` INT NOT NULL,
   `WedboardServices_id` INT NOT NULL,
@@ -345,7 +346,7 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `mydb`.`OrderServices` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `quantity` INT NOT NULL,
-  `cost` DECIMAL NOT NULL,
+  `cost` DECIMAL(10,2) NOT NULL,
   `ProjectServices_id` INT NOT NULL,
   `Orders_id` INT NOT NULL,
   `ProviderServices_id` INT NOT NULL,
@@ -376,12 +377,12 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `mydb`.`BudgetDistribution` (
   `id` INT NOT NULL AUTO_INCREMENT,
-  `total` DECIMAL NOT NULL,
-  `category_1` DECIMAL NULL,
-  `category_2` DECIMAL NULL,
-  `category_3` DECIMAL NULL,
-  `category_4` DECIMAL NULL,
-  `category_5` DECIMAL NULL,
+  `total` DECIMAL(10,2) NOT NULL,
+  `category_1` DECIMAL(10,2) NULL,
+  `category_2` DECIMAL(10,2) NULL,
+  `category_3` DECIMAL(10,2) NULL,
+  `category_4` DECIMAL(10,2) NULL,
+  `category_5` DECIMAL(10,2) NULL,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB;
 
@@ -392,8 +393,8 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `mydb`.`Payments` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `OrderServices_id` INT NOT NULL,
-  `paid_amount` DECIMAL NOT NULL,
-  `remaining` DECIMAL NOT NULL,
+  `paid_amount` DECIMAL(10,2) NOT NULL,
+  `remaining` DECIMAL(10,2) NOT NULL,
   `is_paid` TINYINT NULL DEFAULT 0,
   `is_cancelled` TINYINT NULL DEFAULT 0,
   `is_verified` TINYINT NULL DEFAULT 0,
@@ -413,9 +414,9 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `mydb`.`ProjectFinances` (
   `id` INT NOT NULL AUTO_INCREMENT,
-  `total_budget` DECIMAL NULL,
-  `total_paid` DECIMAL NULL,
-  `remaining` DECIMAL NULL,
+  `total_budget` DECIMAL(10,2) NULL,
+  `total_paid` DECIMAL(10,2) NULL,
+  `remaining` DECIMAL(10,2) NULL,
   `Projects_id` INT NOT NULL,
   `BudgetDistribution_id` INT NULL,
   PRIMARY KEY (`id`),

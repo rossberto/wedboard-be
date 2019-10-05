@@ -74,3 +74,19 @@
 	  "webPage": "pagina3.com"
 	}
 }
+
+// POST / PUT Provider Service
+{
+	"data": {
+    "name": "Servicio3",
+    "description": "descripcion3",
+    "descriptionOptional": "opcional",
+    "minRange": 50,
+    "maxRange": 100,
+    "rangeUnit": "people",
+    "price": 25330.5,
+    "providerServiceCode": "s3",
+    "providerId": 2,
+    "wedboardServicesId": 1
+  }
+}
