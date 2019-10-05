@@ -86,7 +86,18 @@ ordersRouter.param('orderId', (req, res, next, orderId) => {
 
 // GET /api/projects/:projectId/orders/:orderId
 ordersRouter.get('/:orderId', (req, res, next) => {
-  res.status(200).send({order: req.order});
+  const sql = `SELECT * FROM OrderServices WHERE Orders_id=${req.orderId}`;
+  db.query(sql, function(err, services) {
+    console.log(services);
+    if (err) {
+      next(err);
+    } else {
+      res.order = req.order;
+      res.order.services = services;
+      res.status(200).send(res.order);
+    }
+  });
+  //res.status(200).send({order: req.order});
 });
 
 // PUT /api/projects/:projectId/orders/:orderId
