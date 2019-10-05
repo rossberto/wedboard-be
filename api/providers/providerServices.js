@@ -70,16 +70,17 @@ providerServicesRouter.post('/', setDataRequirements, mw.validateRequest, mw.get
   });
 });
 
-/*
-providerServicesRouter.param('providerId', (req, res, next, providerId) => {
-  const sql = `SELECT * FROM Providers WHERE id=${providerId}`;
-  db.query(sql, (err, provider) => {
+
+providerServicesRouter.param('serviceId', (req, res, next, serviceId) => {
+  const sql = `SELECT * FROM ProviderServices WHERE id=${serviceId} ` +
+              `AND Providers_id=${req.providerId}`;
+  db.query(sql, (err, service) => {
     if (err) {
       next(err);
     } else {
-      if (provider) {
-        req.providerId = providerId;
-        req.provider = provider[0];
+      if (service && service[0]) {
+        req.serviceId = serviceId;
+        req.service = service[0];
         next();
       } else {
         res.status(404).send();
@@ -88,63 +89,54 @@ providerServicesRouter.param('providerId', (req, res, next, providerId) => {
   });
 });
 
-// GET /api/providers/:providerId
-providerServicesRouter.get('/:providerId', (req, res, next) => {
-  res.status(200).send({provider: req.provider});
+// GET /api/providers/:providerId/services/:serviceId
+providerServicesRouter.get('/:serviceId', (req, res, next) => {
+  res.status(200).send({service: req.service});
 });
 
-// PUT /api/providers/:providerId
-providerServicesRouter.put('/:providerId', mw.validateProvider, mw.getProviderValues, (req, res, next) => {
-  const sql = 'UPDATE Providers SET ' +
+
+// PUT /api/providers/:providerId/services/:serviceId
+providerServicesRouter.put('/:serviceId', setDataRequirements, mw.validateRequest, mw.getValues, (req, res, next) => {
+  const sql = 'UPDATE ProviderServices SET ' +
               'name= ? , ' +
-              'is_active= ? , ' +
-              'country_iso_a3c= ? , ' +
-              'state= ? , ' +
-              'city= ? , ' +
-              'join_date= ? , ' +
-              'zip_code= ? , ' +
-              'address= ? , ' +
-              'address_optional= ? , ' +
-              'phone= ? , ' +
-              'web_page= ? ' +
-              `WHERE id=${req.providerId}`;
+              'description= ? , ' +
+              'description_optional= ? , ' +
+              'min_range= ? , ' +
+              'max_range= ? , ' +
+              'range_unit= ? , ' +
+              'price= ? , ' +
+              'provider_service_code= ? , ' +
+              'WedboardServices_id= ? ' +
+              `WHERE id=${req.serviceId} AND Providers_id=${req.providerId}`;
   db.query(sql, req.values[0], function(err) {
     if (err) {
       next(err);
     } else {
-      db.query(`SELECT * FROM Providers WHERE id=${req.providerId}`, (err, provider) => {
+      db.query(`SELECT * FROM ProviderServices WHERE id=${req.serviceId}`, (err, service) => {
         if (err) {
           next(err)
         } else {
-          res.status(200).send({provider: provider[0]});
+          res.status(200).send({service: service[0]});
         }
       });
     }
   });
 });
 
-// DELETE /api/providers/:providerId
-providerServicesRouter.delete('/:providerId', (req, res, next) => {
-  console.log('DELETE specific provider fetched');
 
-  const sql = 'UPDATE Providers ' +
-              'SET is_active=0 ' +
-              `WHERE id=${req.providerId}`;
+// DELETE /api/providers/:providerId/services/:serviceId
+providerServicesRouter.delete('/:serviceId', (req, res, next) => {
+  const sql = 'DELETE FROM ProviderServices ' +
+              `WHERE id=${req.serviceId} AND Providers_id=${req.providerId}`;
   db.query(sql, err => {
     if (err) {
       next(err);
     } else {
-      db.query(`SELECT * FROM Providers WHERE id=${req.providerId}`, (err, provider) => {
-        if (err) {
-          next(err);
-        } else {
-          res.status(200).send({provider: provider[0]});
-        }
-      });
+      res.status(204).send();
     }
   });
 });
-*/
+
 //const providerServicesRouter = require('./providerServices.js');
 //providerServicesRouter.use('/services', providerServicesRouter);
 
