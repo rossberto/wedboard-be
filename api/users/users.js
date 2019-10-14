@@ -64,7 +64,7 @@ usersRouter.get('/', (req, res, next) => {
     if (err) {
       next(err);
     } else {
-      res.status(200).send({users: users});
+      res.status(200).send(users);
     }
   });
 });
