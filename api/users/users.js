@@ -18,39 +18,39 @@ const usersRouter = express.Router();
 function setDataRequirements(req, res, next) {
   req.minimumRequestData = [
     'name',
-    'lastName',
+    'last_name',
     'email',
     'type',
-    'joinDate'
+    'join_date'
   ];
 
   req.expectedPostData = [
     'name',
-    'lastName',
-    'lastName2',
+    'last_name',
+    'last_name2',
     'email',
     'type',
-    'joinDate',
+    'join_date',
     'birthdate',
     'gender',
     'phone',
     'token',
-    'isOnline',
-    'isForbidden'
+    'is_online',
+    'is_forbidden'
   ];
 
   req.expectedUpdateData = [
     'name',
-    'lastName',
-    'lastName2',
+    'last_name',
+    'last_name2',
     'email',
     'type',
     'birthdate',
     'gender',
     'phone',
     'token',
-    'isOnline',
-    'isForbidden'
+    'is_online',
+    'is_forbidden'
   ];
 
   next();
