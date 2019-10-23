@@ -27,7 +27,7 @@ function setDataRequirements(req, res, next) {
   req.expectedPostData = [
     'name',
     'last_name',
-    'last_name2',
+    'last_name_2',
     'email',
     'type',
     'join_date',
@@ -42,7 +42,7 @@ function setDataRequirements(req, res, next) {
   req.expectedUpdateData = [
     'name',
     'last_name',
-    'last_name2',
+    'last_name_2',
     'email',
     'type',
     'birthdate',

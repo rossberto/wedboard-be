@@ -105,7 +105,6 @@ projectsRouter.param('projectId', (req, res, next, projectId) => {
     } else if (project[0]) {
       req.projectId = projectId;
       req.project = project[0];
-      console.log(req.project);
       next();
     } else {
       res.status(404).send();
@@ -115,7 +114,7 @@ projectsRouter.param('projectId', (req, res, next, projectId) => {
 
 // GET /api/projects/:projectId
 projectsRouter.get('/:projectId', (req, res, next) => {
-  res.status(200).send({project: req.project});
+  res.status(200).send(req.project);
 });
 
 // PUT /api/projects/:projectId
