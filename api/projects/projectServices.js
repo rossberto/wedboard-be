@@ -40,12 +40,18 @@ function setDataRequirements(req, res, next) {
 
 // GET /api/projects/:projectId/services
 projectServicesRouter.get('/', (req, res, next) => {
-  const sql = `SELECT * FROM ProjectServices WHERE Projects_id=${req.projectId}` ;
+  //const sql = `SELECT * FROM ProjectServices WHERE Projects_id=${req.projectId}` ;
+  const sql = 'SELECT * FROM (' +
+	               'SELECT Projects_id, ProjectServices.id AS ProjectServices_id, category, service , ' +
+                 'quantity, comments, comments_2 ' +
+                 'FROM ProjectServices JOIN WedboardServices ' +
+                 'ON ProjectServices.WedboardServices_id = WedboardServices.id ' +
+              `) TablaDerivada WHERE TablaDerivada.Projects_id=${req.projectId}`;
   db.query(sql, function(err, services) {
     if (err) {
       next(err);
     } else {
-      res.status(200).send({services: services});
+      res.status(200).send(services);
     }
   });
 });
@@ -53,7 +59,7 @@ projectServicesRouter.get('/', (req, res, next) => {
 // POST /api/projects/:projectId/services
 projectServicesRouter.post('/', setDataRequirements, mw.validatePostRequest, mw.getValues, (req, res, next) => {
   req.values[0].push(req.projectId);
-  
+
   let sql = 'INSERT INTO ProjectServices (WedboardServices_id, ' +
             'quantity, comments, comments_2, Projects_id) VALUES ?';
   db.query(sql, [req.values], function(err, result) {
