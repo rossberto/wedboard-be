@@ -11,36 +11,15 @@ const mw = require('../middleware');
 
 const projectUsersRouter = express.Router();
 
-// Local middleware
-function setDataRequirements(req, res, next) {
-  console.log(req.params);
-  req.minimumRequestData = [
-    'Projects_id',
-    'Users_id'
-  ];
-
-  req.expectedPostData = [
-    'Projects_id',
-    'Users_id'
-  ];
-
-  req.expectedUpdateData = [
-    'Projects_id',
-    'Users_id'
-  ];
-
-  next();
-}
-
 /***** project Routes *****/
 
 // GET /api/projects/:projectId/users
 projectUsersRouter.get('/', (req, res, next) => {
   const sql = 'SELECT * FROM (' +
-	               'SELECT Projects_id, Users_id, ' +
-                 'FROM ProjectUsers JOIN Users ' +
-                 'ON ProjectUsers.Users_id = Users.id ' +
-              `) TablaDerivada WHERE TablaDerivada.Projects_id=${req.projectId}`;
+                'SELECT Projects_id, name, last_name, last_name_2, email, type, phone, Users_id ' +
+                'FROM Users_pairs_Projects ' +
+                'JOIN Users ON Users_pairs_Projects.Users_id = Users.id ' +
+                `) TablaDerivada WHERE TablaDerivada.Projects_id=${req.projectId}`;
   db.query(sql, function(err, services) {
     if (err) {
       next(err);
