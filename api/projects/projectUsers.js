@@ -52,23 +52,13 @@ projectUsersRouter.get('/', (req, res, next) => {
 
 // POST /api/projects/:projectId/users
 projectUsersRouter.post('/', (req, res, next) => {
-  //req.values[0].push(req.projectId);
-  console.log(req.body.data.values);
-
-  let sql = `INSERT INTO ProjectUsers (Projects_id, Users_id) VALUES (${req.projectId}, ?)`;
+  const sql = `INSERT INTO Users_pairs_Projects (Projects_id, Users_id) VALUES ?`;
   db.query(sql, [req.body.data.values], function(err, result) {
-    console.log(sql);
     if (err) {
       next(err);
     } else {
-      sql = 'SELECT * FROM ProjectServices WHERE id= ? LIMIT 1';
-      db.query(sql, [result.insertId], function(err, insertedService) {
-        if (err) {
-          next(err);
-        } else {
-          res.status(201).send({project: insertedService[0]});
-        }
-      });
+      console.log('Number of inserted records: ' + result.affectedRows);
+      res.status(201).send();
     }
   });
 });
