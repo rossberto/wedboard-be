@@ -158,4 +158,7 @@ projectsRouter.use('/:projectId/services', projectServicesRouter);
 const ordersRouter = require('../orders/orders');
 projectsRouter.use('/:projectId/orders', ordersRouter);
 
+const projectUsersRouter = require('./projectUsers');
+projectsRouter.use('/:projectId/users', projectUsersRouter);
+
 module.exports = projectsRouter;

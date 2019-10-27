@@ -16,6 +16,8 @@ const usersRouter = express.Router();
 
 // Local Middleware
 function setDataRequirements(req, res, next) {
+  console.log(req.params);
+  
   req.minimumRequestData = [
     'name',
     'last_name',
