@@ -5,10 +5,12 @@ const usersRouter = require('./users/users');
 const projectsRouter = require('./projects/projects');
 const servicesRouter = require('./services/services');
 const providersRouter = require('./providers/providers');
+const surveysRouter = require('./surveys/surveys');
 
 apiRouter.use('/users', usersRouter);
 apiRouter.use('/projects', projectsRouter);
 apiRouter.use('/services', servicesRouter);
 apiRouter.use('/providers', providersRouter);
+apiRouter.use('/surveys', surveysRouter);
 
 module.exports = apiRouter;

@@ -101,3 +101,24 @@
     "providerId": 2
   }
 }
+
+// POST Survey
+{
+	"section": "Surveys",
+	"data": {
+		"last_modification_timestamp": "2014-06-22",
+		"status": "Testing",
+		"active_step": 1,
+		"Projects_id": 1
+	}
+}
+
+POST Final Section of Survey
+{
+	"section": "FinalSection",
+	"data": {
+		"answer_1": "Respuesta 1",
+		"answer_2": "Respuesta 2",
+		"Surveys_id": 1
+	}
+}
