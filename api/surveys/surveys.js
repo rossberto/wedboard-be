@@ -85,6 +85,30 @@ function validateSection(req, res, next) {
   }
 }
 
+function getSections(req, res, next) {
+  const sections = [
+    'WeddingConceptSection', 'BudgetSection', 'GuestsSection', 'CeremonySection',
+    'WeddingDaySection', 'AmbientSection', 'EntertainmentSection', 'FinalSection'
+  ];
+  const activeStep = req.survey.active_step;
+  console.log('Step: ' + activeStep);
+
+  for (var i = 0; i<(activeStep); i++) {
+    console.log('Seccion: ' + sections[i]);
+    const sql = `SELECT * FROM ${sections[i]}`
+    db.query(sql, function(err, section) {
+      if (err) {
+        next(err);
+      } else {
+        req.survey[sections[i]] = section[0];
+        console.log(req.survey);
+      }
+    });
+  }
+
+  next();
+}
+
 /***** project Routes *****/
 
 // GET /api/surveys
@@ -99,25 +123,7 @@ surveysRouter.get('/', (req, res, next) => {
   });
 });
 
-// POST /api/surveys
-surveysRouter.post('/',validateSection, setDataRequirements, mw.validatePostRequest, (req, res, next) => {
-  db.query(`INSERT INTO ${req.body.section} SET ?`, req.body.data, function(err, result) { //[req.values], function(err, result) {
-    if (err) {
-      next(err);
-    } else {
-      sql = `SELECT * FROM ${req.body.section} WHERE id= ? LIMIT 1`;
-      db.query(sql, [result.insertId], function(err, insertedSection) {
-        if (err) {
-          next(err);
-        } else {
-          res.status(201).send(insertedSection[0]);
-        }
-      });
-    }
-  });
-});
-
-// POST /api/surveys
+// POST /api/surveys/
 surveysRouter.post('/',validateSection, setDataRequirements, mw.validatePostRequest, (req, res, next) => {
   db.query(`INSERT INTO ${req.body.section} SET ?`, req.body.data, function(err, result) { //[req.values], function(err, result) {
     if (err) {
@@ -143,7 +149,27 @@ surveysRouter.param('surveyId', (req, res, next, surveyId) => {
     } else if (survey[0]) {
       req.surveyId = surveyId;
       req.survey = survey[0];
-      next();
+
+      const sections = [
+        'WeddingConceptSection', 'BudgetSection', 'GuestsSection', 'CeremonySection',
+        'WeddingDaySection', 'AmbientSection', 'EntertainmentSection', 'FinalSection'
+      ];
+
+      let sectionsSql = '';
+      for (let i=0; i<req.survey.active_step; i++) {
+        sectionsSql += `SELECT * FROM ${sections[i]} WHERE Surveys_id=${surveyId}; ` //allSql[i];
+      }
+
+      db.query(sectionsSql, function(err, results) {
+        if (err) {
+          next(err);
+        } else {
+          for (let i=0; i<req.survey.active_step; i++) {
+            req.survey[sections[i]] = results[i]
+          }
+          next();
+        }
+      });
     } else {
       res.status(404).send();
     }
@@ -152,6 +178,7 @@ surveysRouter.param('surveyId', (req, res, next, surveyId) => {
 
 // GET /api/surveys/:surveyId
 surveysRouter.get('/:surveyId', (req, res, next) => {
+  console.log(req.survey);
   res.status(200).send(req.survey);
 });
 

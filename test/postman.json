@@ -113,7 +113,40 @@
 	}
 }
 
-POST Final Section of Survey
+// POST Wedding Concept Section of Survey
+{
+	"section": "WeddingConceptSection",
+	"data": {
+		"answer_1": "R1",
+		"answer_2": "R2",
+		"answer_3": "R3",
+		"answer_4": "R4",
+		"answer_5_food": 1,
+		"answer_5_drinks": 2,
+		"answer_5_decoration": 3,
+		"answer_5_illumination": 4,
+		"answer_5_music": 5,
+		"answer_5_place": 4,
+		"answer_5_flowers": 2,
+		"answer_5_service": 3,
+		"answer_5_photo": 2,
+		"answer_5_video": 3,
+		"Surveys_id": 1
+	}
+}
+
+// POST Budget Section of Survey
+{
+	"section": "BudgetSection",
+	"data": {
+		"answer_1_budget": 350000,
+		"answer_2": "R2",
+		"answer_3": "R3",
+		"Surveys_id": 1
+	}
+}
+
+// POST Final Section of Survey
 {
 	"section": "FinalSection",
 	"data": {
