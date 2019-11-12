@@ -2,14 +2,11 @@
 /*
     GET /api/surveys
     POST /api/surveys
-    GET /api/surveys/:projectId
-    PUT /api/surveys/:projectId
+    GET /api/surveys/:surveyId
+    PUT /api/surveys/:surveyId
 */
 const express = require('express');
 const db = require('../../db/database');
-
-// project's Middleware
-//const setDataRequirements = require('./requestRequirements');
 const mw = require('../middleware');
 
 const surveysRouter = express.Router();
@@ -54,7 +51,7 @@ function setDataRequirements(req, res, next) {
 
   req.minimumRequestData = reqData[req.body.section];
   req.expectedPostData = reqData[req.body.section];
-  reqData[req.body.section].pop(); // We take out the id from request requirements
+  reqData[req.body.section].pop(); // Take out the id from request requirements
   req.expectedUpdateData = reqData[req.body.section];
 
   next();
@@ -62,11 +59,13 @@ function setDataRequirements(req, res, next) {
 
 function validateSection(req, res, next) {
   const section = req.body.section;
-  console.log('La seccion solicitada es: ' + section);
 
   if (section) {
     switch (section) {
       case 'Surveys':
+        req.sectionIdColumn = 'id';
+        next();
+        break;
       case 'WeddingConceptSection':
       case 'BudgetSection':
       case 'GuestsSection':
@@ -75,38 +74,15 @@ function validateSection(req, res, next) {
       case 'AmbientSection':
       case 'EntertainmentSection':
       case 'FinalSection':
+        req.sectionIdColumn = 'Surveys_id';
         next();
         break;
       default:
-        res.status(401).send();
+        res.status(400).send();
     }
   } else {
     res.status(400).send();
   }
-}
-
-function getSections(req, res, next) {
-  const sections = [
-    'WeddingConceptSection', 'BudgetSection', 'GuestsSection', 'CeremonySection',
-    'WeddingDaySection', 'AmbientSection', 'EntertainmentSection', 'FinalSection'
-  ];
-  const activeStep = req.survey.active_step;
-  console.log('Step: ' + activeStep);
-
-  for (var i = 0; i<(activeStep); i++) {
-    console.log('Seccion: ' + sections[i]);
-    const sql = `SELECT * FROM ${sections[i]}`
-    db.query(sql, function(err, section) {
-      if (err) {
-        next(err);
-      } else {
-        req.survey[sections[i]] = section[0];
-        console.log(req.survey);
-      }
-    });
-  }
-
-  next();
 }
 
 /***** project Routes *****/
@@ -125,7 +101,7 @@ surveysRouter.get('/', (req, res, next) => {
 
 // POST /api/surveys/
 surveysRouter.post('/',validateSection, setDataRequirements, mw.validatePostRequest, (req, res, next) => {
-  db.query(`INSERT INTO ${req.body.section} SET ?`, req.body.data, function(err, result) { //[req.values], function(err, result) {
+  db.query(`INSERT INTO ${req.body.section} SET ?`, req.body.data, function(err, result) {
     if (err) {
       next(err);
     } else {
@@ -157,7 +133,7 @@ surveysRouter.param('surveyId', (req, res, next, surveyId) => {
 
       let sectionsSql = '';
       for (let i=0; i<req.survey.active_step; i++) {
-        sectionsSql += `SELECT * FROM ${sections[i]} WHERE Surveys_id=${surveyId}; ` //allSql[i];
+        sectionsSql += `SELECT * FROM ${sections[i]} WHERE Surveys_id=${surveyId}; `
       }
 
       db.query(sectionsSql, function(err, results) {
@@ -178,73 +154,26 @@ surveysRouter.param('surveyId', (req, res, next, surveyId) => {
 
 // GET /api/surveys/:surveyId
 surveysRouter.get('/:surveyId', (req, res, next) => {
-  console.log(req.survey);
   res.status(200).send(req.survey);
 });
 
-// PUT /api/surveys
-surveysRouter.put('/',validateSection, setDataRequirements, mw.validatePostRequest, (req, res, next) => {
-  db.query(`UPDATE ${req.body.section} SET ?`, req.body.data, function(err, result) { //[req.values], function(err, result) {
+// PUT /api/surveys/:surveyId
+surveysRouter.put('/:surveyId',validateSection, setDataRequirements, mw.validatePostRequest, (req, res, next) => {
+  console.log(req.sectionIdColumn);
+  db.query(`UPDATE ${req.body.section} SET ? WHERE ${req.sectionIdColumn}=${req.surveyId}`, req.body.data, function(err, result) {
     if (err) {
       next(err);
     } else {
-      sql = `SELECT * FROM ${req.body.section} WHERE id= ? LIMIT 1`;
+      sql = `SELECT * FROM ${req.body.section} WHERE ${req.sectionIdColumn}=${req.surveyId} LIMIT 1`;
       db.query(sql, [result.insertId], function(err, insertedSection) {
         if (err) {
           next(err);
         } else {
-          res.status(201).send(insertedSection[0]);
+          res.status(200).send(insertedSection[0]);
         }
       });
     }
   });
 });
 
-/*
-
-
-// PUT /api/surveys/:projectId
-surveysRouter.put('/:projectId', setDataRequirements, mw.getValues, (req, res, next) => {
-  const sql = 'UPDATE Projects SET ' +
-              'name= ? , ' +
-              'feast_date= ? , ' +
-              'feast_location= ? , ' +
-              'civil_ceremony_date= ? , ' +
-              'civil_ceremony_location= ? , ' +
-              'religious_ceremony_date= ? , ' +
-              'religious_location= ? , ' +
-              'custom_ceremony_description= ? , ' +
-              'custom_ceremony_description_2= ? , ' +
-              'custom_ceremony_date= ? , ' +
-              'custom_ceremony_location= ? , ' +
-              'guests_quantity= ? , ' +
-              'pinterest_board_url= ? ' +
-              `WHERE id=${req.projectId}`;
-
-  const values = req.values[0];
-
-  db.query(sql, values, function(err) {
-    if (err) {
-      next(err);
-    } else {
-      db.query(`SELECT * FROM Projects WHERE id=${req.projectId}`, function(err, project) {
-        if (err) {
-          next(err);
-        } else {
-          res.send({project: project[0]});
-        }
-      });
-    }
-  });
-});
-
-const projectServicesRouter = require('./projectServices.js');
-surveysRouter.use('/:projectId/services', projectServicesRouter);
-
-const ordersRouter = require('../orders/orders');
-surveysRouter.use('/:projectId/orders', ordersRouter);
-
-const projectUsersRouter = require('./projectUsers');
-surveysRouter.use('/:projectId/users', projectUsersRouter);
-*/
 module.exports = surveysRouter;

@@ -113,6 +113,16 @@
 	}
 }
 
+// PUT Survey
+{
+	"section": "Surveys",
+	"data": {
+		"last_modification_timestamp": "2014-06-22",
+		"status": "Testing",
+		"active_step": 2
+	}
+}
+
 // POST Wedding Concept Section of Survey
 {
 	"section": "WeddingConceptSection",
@@ -143,6 +153,16 @@
 		"answer_2": "R2",
 		"answer_3": "R3",
 		"Surveys_id": 1
+	}
+}
+
+// PUT Budget Section of Survey
+{
+	"section": "BudgetSection",
+	"data": {
+		"answer_1_budget": 350000.5,
+		"answer_2": "R2 cambiado",
+		"answer_3": "R3"
 	}
 }
 
