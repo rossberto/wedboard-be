@@ -141,7 +141,7 @@ surveysRouter.param('surveyId', (req, res, next, surveyId) => {
           next(err);
         } else {
           for (let i=0; i<req.survey.active_step; i++) {
-            req.survey[sections[i]] = results[i]
+            req.survey[sections[i]] = results[i][0];
           }
           next();
         }

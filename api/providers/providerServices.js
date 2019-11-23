@@ -48,12 +48,29 @@ function setDataRequirements(req, res, next) {
 // Get all services of a given provider
 // GET /api/providers/:providerId/services
 providerServicesRouter.get('/', (req, res, next) => {
-  const sql = `SELECT * FROM ProviderServices WHERE Providers_id=${req.providerId}`;
+  let sql = `SELECT * FROM ProviderServices WHERE Providers_id=${req.providerId}`;
   db.query(sql, function(err, services) {
     if (err) {
       next(err);
     } else {
-      res.status(200).send({services: services});
+      req.services = services;
+      let categoriesSql = '';
+
+      req.services.forEach(service => {
+        categoriesSql += `SELECT * FROM WedboardServices WHERE id=${service.WedboardServices_id}; `;
+      });
+
+      db.query(categoriesSql, function(err, results) {
+        if (err) {
+          next(err);
+        } else {
+          req.services.forEach((service, index) => {
+            delete service.WedboardServices_id;
+            service.wedboardService = results[index];
+          });
+          res.status(200).send({services: services});
+        }
+      });
     }
   });
 });

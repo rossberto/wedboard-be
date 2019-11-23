@@ -17,8 +17,8 @@ const projectUsersRouter = express.Router();
 projectUsersRouter.get('/', (req, res, next) => {
   const sql = 'SELECT * FROM (' +
                 'SELECT Projects_id, name, last_name, last_name_2, email, type, phone, Users_id ' +
-                'FROM Users_pairs_Projects ' +
-                'JOIN Users ON Users_pairs_Projects.Users_id = Users.id ' +
+                'FROM ProjectUsers ' +
+                'JOIN Users ON ProjectUsers.Users_id = Users.id ' +
                 `) TablaDerivada WHERE TablaDerivada.Projects_id=${req.projectId}`;
   db.query(sql, function(err, services) {
     if (err) {
@@ -31,7 +31,7 @@ projectUsersRouter.get('/', (req, res, next) => {
 
 // POST /api/projects/:projectId/users
 projectUsersRouter.post('/', (req, res, next) => {
-  const sql = `INSERT INTO Users_pairs_Projects (Projects_id, Users_id) VALUES ?`;
+  const sql = `INSERT INTO ProjectUsers (Projects_id, Users_id) VALUES ?`;
   db.query(sql, [req.body.data.values], function(err, result) {
     if (err) {
       next(err);
