@@ -11,38 +11,82 @@ function setDataRequirements(req, res, next) {
   req.minimumRequestData = [
     'name',
     'description',
-    'minRange',
-    'maxRange',
-    'rangeUnit',
+    'min_range',
+    'max_range',
+    'range_unit',
     'price',
-    'wedboardServiceId'
+    'WedboardServices_id'
   ];
 
   req.expectedPostData = [
     'name',
     'description',
-    'descriptionOptional',
-    'minRange',
-    'maxRange',
-    'rangeUnit',
+    'description_optional',
+    'min_range',
+    'max_range',
+    'range_unit',
     'price',
-    'providerServiceCode',
-    'wedboardServiceId'
+    'provider_service_code',
+    'WedboardServices_id'
   ];
 
   req.expectedUpdateData = [
     'name',
     'description',
-    'descriptionOptional',
-    'minRange',
-    'maxRange',
-    'rangeUnit',
+    'description_optional',
+    'min_range',
+    'max_range',
+    'range_unit',
     'price',
-    'providerServiceCode',
-    'wedboardServiceId'
+    'provider_service_code',
+    'WedboardServices_id'
   ];
 
   next();
+}
+
+function getMore(req, res, next) {
+  sql = `SELECT * FROM WedboardServices WHERE id=${req.service.WedboardServices_id}; ` +
+        `SELECT * FROM ProviderServicesImages WHERE ProviderServices_id=${req.serviceId}`;
+  db.query(sql, function(err, results) {
+    if (err) {
+      next(err);
+    } else {
+      delete req.service.WedboardServices_id;
+      req.service.wedboardService = results[0][0];
+      req.service.images = results[1];
+
+      next();
+    }
+  });
+}
+
+function update(req, res, next) {
+  const sql = 'UPDATE ProviderServices SET ' +
+              'name= ? , ' +
+              'description= ? , ' +
+              'description_optional= ? , ' +
+              'min_range= ? , ' +
+              'max_range= ? , ' +
+              'range_unit= ? , ' +
+              'price= ? , ' +
+              'provider_service_code= ? , ' +
+              'WedboardServices_id= ? ' +
+              `WHERE id=${req.serviceId} AND Providers_id=${req.providerId}`;
+  db.query(sql, req.values[0], function(err) {
+    if (err) {
+      next(err);
+    } else {
+      db.query(`SELECT * FROM ProviderServices WHERE id=${req.serviceId}`, (err, service) => {
+        if (err) {
+          next(err)
+        } else {
+          next();
+          //res.status(200).send({service: service[0]});
+        }
+      });
+    }
+  });
 }
 
 // Get all services of a given provider
@@ -54,21 +98,21 @@ providerServicesRouter.get('/', (req, res, next) => {
       next(err);
     } else {
       req.services = services;
-      let categoriesSql = '';
+      sql = '';
 
       req.services.forEach(service => {
-        categoriesSql += `SELECT * FROM WedboardServices WHERE id=${service.WedboardServices_id}; `;
+        sql += `SELECT * FROM WedboardServices WHERE id=${service.WedboardServices_id}; `;
       });
 
-      db.query(categoriesSql, function(err, results) {
+      db.query(sql, function(err, results) {
         if (err) {
           next(err);
         } else {
           req.services.forEach((service, index) => {
             delete service.WedboardServices_id;
-            service.wedboardService = results[index];
+            service.wedboardService = results[index][0];
           });
-          res.status(200).send({services: services});
+          res.status(200).send(req.services);
         }
       });
     }
@@ -101,7 +145,8 @@ providerServicesRouter.post('/', setDataRequirements, mw.validatePostRequest, mw
 
 
 providerServicesRouter.param('serviceId', (req, res, next, serviceId) => {
-  const sql = `SELECT * FROM ProviderServices WHERE id=${serviceId} ` +
+  console.log(req.body);
+  let sql = `SELECT * FROM ProviderServices WHERE id=${serviceId} ` +
               `AND Providers_id=${req.providerId}`;
   db.query(sql, (err, service) => {
     if (err) {
@@ -110,6 +155,7 @@ providerServicesRouter.param('serviceId', (req, res, next, serviceId) => {
       if (service && service[0]) {
         req.serviceId = serviceId;
         req.service = service[0];
+
         next();
       } else {
         res.status(404).send();
@@ -119,33 +165,30 @@ providerServicesRouter.param('serviceId', (req, res, next, serviceId) => {
 });
 
 // GET /api/providers/:providerId/services/:serviceId
-providerServicesRouter.get('/:serviceId', (req, res, next) => {
-  res.status(200).send({service: req.service});
+providerServicesRouter.get('/:serviceId', getMore, (req, res, next) => {
+  res.status(200).send(req.service);
 });
 
 
 // PUT /api/providers/:providerId/services/:serviceId
-providerServicesRouter.put('/:serviceId', setDataRequirements, mw.getValues, (req, res, next) => {
-  const sql = 'UPDATE ProviderServices SET ' +
-              'name= ? , ' +
-              'description= ? , ' +
-              'description_optional= ? , ' +
-              'min_range= ? , ' +
-              'max_range= ? , ' +
-              'range_unit= ? , ' +
-              'price= ? , ' +
-              'provider_service_code= ? , ' +
-              'WedboardServices_id= ? ' +
-              `WHERE id=${req.serviceId} AND Providers_id=${req.providerId}`;
-  db.query(sql, req.values[0], function(err) {
+providerServicesRouter.put('/:serviceId', setDataRequirements, mw.getValues, update, (req, res, next) => {
+  let sql = `SELECT * FROM ProviderServices WHERE id=${req.serviceId} ` +
+              `AND Providers_id=${req.providerId}`;
+  db.query(sql, (err, service) => {
     if (err) {
       next(err);
     } else {
-      db.query(`SELECT * FROM ProviderServices WHERE id=${req.serviceId}`, (err, service) => {
+      sql = `SELECT * FROM WedboardServices WHERE id=${req.service.WedboardServices_id}; ` +
+            `SELECT * FROM ProviderServicesImages WHERE ProviderServices_id=${req.serviceId}`;
+      db.query(sql, function(err, results) {
         if (err) {
-          next(err)
+          next(err);
         } else {
-          res.status(200).send({service: service[0]});
+          delete req.service.WedboardServices_id;
+          req.service.wedboardService = results[0][0];
+          req.service.images = results[1];
+
+          res.status(200).send(req.service);
         }
       });
     }
