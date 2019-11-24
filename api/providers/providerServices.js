@@ -145,7 +145,6 @@ providerServicesRouter.post('/', setDataRequirements, mw.validatePostRequest, mw
 
 
 providerServicesRouter.param('serviceId', (req, res, next, serviceId) => {
-  console.log(req.body);
   let sql = `SELECT * FROM ProviderServices WHERE id=${serviceId} ` +
               `AND Providers_id=${req.providerId}`;
   db.query(sql, (err, service) => {
@@ -208,5 +207,8 @@ providerServicesRouter.delete('/:serviceId', (req, res, next) => {
     }
   });
 });
+
+const providerServicesImagesRouter = require('./providerServicesImages.js');
+providerServicesRouter.use('/:serviceId/images', providerServicesImagesRouter);
 
 module.exports = providerServicesRouter;

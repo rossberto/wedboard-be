@@ -175,3 +175,9 @@
 		"Surveys_id": 1
 	}
 }
+
+// POST Provider Service image
+{
+	"image_url": "assets/images/ecommerce/lago-di-sorapis.jpg",
+	"alt": "Image link broken"
+}

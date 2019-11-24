@@ -1,6 +1,5 @@
 function validatePostRequest(req, res, next) {
   const request = req.body.data;
-  console.log(request);
   const minimumData = req.minimumRequestData;
 
   const valid = minimumData.every(data => {
