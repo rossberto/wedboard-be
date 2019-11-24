@@ -44,7 +44,7 @@ function setDataRequirements(req, res, next) {
 
   next();
 }
-
+/*
 function getMore(req, res, next) {
   sql = `SELECT * FROM WedboardServices WHERE id=${req.order.WedboardServices_id}; ` +
         `SELECT * FROM ProviderServicesImages WHERE ProviderServices_id=${req.orderId}`;
@@ -88,7 +88,7 @@ function update(req, res, next) {
     }
   });
 }
-
+*/
 // Get all orders of a given provider
 // GET /api/providers/:providerId/orders
 providerOrdersRouter.get('/', (req, res, next) => {
@@ -141,10 +141,10 @@ providerOrdersRouter.post('/', setDataRequirements, mw.validatePostRequest, mw.g
     }
   });
 });
-
+*/
 
 providerOrdersRouter.param('orderId', (req, res, next, orderId) => {
-  let sql = `SELECT * FROM ProviderServices WHERE id=${orderId} ` +
+  let sql = `SELECT * FROM Orders WHERE id=${orderId} ` +
               `AND Providers_id=${req.providerId}`;
   db.query(sql, (err, order) => {
     if (err) {
@@ -154,7 +154,39 @@ providerOrdersRouter.param('orderId', (req, res, next, orderId) => {
         req.orderId = orderId;
         req.order = order[0];
 
-        next();
+        sql  = `SELECT * FROM OrderServices WHERE Orders_id=${req.orderId}; `;
+        sql += `SELECT * FROM Projects WHERE id=${req.order.Projects_id}; `;
+        sql += `SELECT * FROM Payments WHERE Orders_id=${req.orderId}`
+        db.query(sql, function(err, results) {
+          if (err) {
+            next(err);
+          } else {
+            req.order.services = results[0];
+            req.order.project = results[1][0];
+            req.order.payments = results[2];
+
+            sql = '';
+            req.order.services.forEach(service => {
+              sql += `SELECT * FROM ProviderServicesImages WHERE ProviderServices_id=${service.ProviderServices_id}; `;
+            });
+
+            db.query(sql, function(err, results) {
+              if (err) {
+                next(err);
+              } else {
+                console.log(results);
+                req.order.services.forEach((service, index) => {
+                  if (results[0][0]) {
+                    service.images = results[index];
+                  } else {
+                    service.images = results;
+                  }
+                });
+                next();
+              }
+            });
+          }
+        });
       } else {
         res.status(404).send();
       }
@@ -163,11 +195,11 @@ providerOrdersRouter.param('orderId', (req, res, next, orderId) => {
 });
 
 // GET /api/providers/:providerId/orders/:orderId
-providerOrdersRouter.get('/:orderId', getMore, (req, res, next) => {
+providerOrdersRouter.get('/:orderId', (req, res, next) => {
   res.status(200).send(req.order);
 });
 
-
+/*
 // PUT /api/providers/:providerId/orders/:orderId
 providerOrdersRouter.put('/:orderId', setDataRequirements, mw.getValues, update, (req, res, next) => {
   let sql = `SELECT * FROM ProviderServices WHERE id=${req.orderId} ` +
