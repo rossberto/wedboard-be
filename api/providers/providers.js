@@ -154,4 +154,7 @@ providersRouter.delete('/:providerId', (req, res, next) => {
 const providerServicesRouter = require('./providerServices.js');
 providersRouter.use('/:providerId/services', providerServicesRouter);
 
+const providerOrdersRouter = require('./providerOrders.js');
+providersRouter.use('/:providerId/orders', providerOrdersRouter);
+
 module.exports = providersRouter;
