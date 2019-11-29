@@ -118,6 +118,7 @@ surveysRouter.post('/',validateSection, setDataRequirements, mw.validatePostRequ
 });
 
 surveysRouter.param('surveyId', (req, res, next, surveyId) => {
+  console.log(req.body);
   const sql = `SELECT * FROM Surveys WHERE id=${surveyId} LIMIT 1`;
   db.query(sql, function(err, survey) {
     if (err) {
@@ -141,7 +142,11 @@ surveysRouter.param('surveyId', (req, res, next, surveyId) => {
           next(err);
         } else {
           for (let i=0; i<req.survey.active_step; i++) {
-            req.survey[sections[i]] = results[i][0];
+            if (results[0][0]) {
+              req.survey[sections[i]] = results[i][0];
+            } else {
+              req.survey[sections[i]] = results[0];
+            }
           }
           next();
         }
