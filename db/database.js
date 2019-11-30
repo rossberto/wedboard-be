@@ -11,7 +11,8 @@ const connection = mysql.createPool({
   database: 'heroku_0c5078081bd3dc6'              //'mydb'
 });
 
-connection.connect(function(err) {
+//connection.connect(function(err) {
+connection.getConnection(function(err, connection) {
   if (err) throw err;
 
   console.log("Connected!");
