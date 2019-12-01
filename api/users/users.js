@@ -17,7 +17,7 @@ const usersRouter = express.Router();
 // Local Middleware
 function setDataRequirements(req, res, next) {
   console.log(req.params);
-  
+
   req.minimumRequestData = [
     'name',
     'last_name',
@@ -141,13 +141,14 @@ usersRouter.put('/:userId', setDataRequirements, mw.validatePostRequest, mw.getV
 
 // DELETE /api/users/:userId
 usersRouter.delete('/:userId', (req, res, next) => {
-  const sql = 'UPDATE Users ' +
-              'SET is_forbidden=1 ' +
+  const sql = 'DELETE FROM Users' + //'UPDATE Users ' +
+              //'SET is_forbidden=1 ' +
               `WHERE id=${req.userId}`;
   db.query(sql, function(err) {
     if (err) {
       next(err);
     } else {
+      /*
       db.query(`SELECT * FROM Users WHERE id=${req.userId}`, function(err, user) {
         if (err) {
           next(err);
@@ -155,6 +156,8 @@ usersRouter.delete('/:userId', (req, res, next) => {
           res.status(200).send({user: user[0]});
         }
       });
+      */
+      res.status(204).send();
     }
   });
 });
