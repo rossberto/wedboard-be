@@ -141,9 +141,7 @@ usersRouter.put('/:userId', setDataRequirements, mw.validatePostRequest, mw.getV
 
 // DELETE /api/users/:userId
 usersRouter.delete('/:userId', (req, res, next) => {
-  const sql = 'DELETE FROM Users' + //'UPDATE Users ' +
-              //'SET is_forbidden=1 ' +
-              `WHERE id=${req.userId}`;
+  const sql = `DELETE FROM Users WHERE id=${req.userId}`;
   db.query(sql, function(err) {
     if (err) {
       next(err);

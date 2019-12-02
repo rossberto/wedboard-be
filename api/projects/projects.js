@@ -28,6 +28,8 @@ function setDataRequirements(req, res, next) {
     'name',
     'feastDate',
     'createdBy',
+    'status',
+    'googleDriveUrl',
     'feastLocation',
     'civilCeremonyDate',
     'civilCeremonyLocation',
@@ -44,6 +46,8 @@ function setDataRequirements(req, res, next) {
   req.expectedUpdateData = [
     'name',
     'feastDate',
+    'status',
+    'googleDriveUrl',
     'feastLocation',
     'civilCeremonyDate',
     'civilCeremonyLocation',
@@ -64,12 +68,36 @@ function setDataRequirements(req, res, next) {
 
 // GET /api/projects
 projectsRouter.get('/', (req, res, next) => {
-  const sql = 'SELECT * FROM Projects';
+  let sql = 'SELECT * FROM Projects';
   db.query(sql, function(err, projects) {
     if (err) {
       next(err);
     } else {
-      res.status(200).send(projects);
+      if (projects.length > 0) {
+        sql = '';
+        for (let i=0; i<projects.length; i++) {
+          sql += `SELECT Users_id, name, type FROM ProjectUsers JOIN Users ON ProjectUsers.Users_id=Users.id WHERE Projects_id=${projects[i].id} AND type='Couple'; `;
+        }
+        console.log(sql);
+
+        db.query(sql, function(err, results) {
+          if (err) {
+            next(err);
+          } else {
+            console.log(results);
+            if (results[0][0]) {
+              projects.forEach((project, index) => {
+                project.couple = results[index];
+              });
+            } else {
+              projects[0].couple = results;
+            }
+            res.status(200).send(projects);
+          }
+        });
+      } else {
+        res.status(200).send(projects);
+      }
     }
   });
 });
@@ -77,7 +105,8 @@ projectsRouter.get('/', (req, res, next) => {
 // POST /api/projects
 projectsRouter.post('/', setDataRequirements, mw.validatePostRequest, mw.getValues, (req, res, next) => {
   let sql = 'INSERT INTO Projects (creation_timestamp, name, feast_date, created_by, ' +
-            ' feast_location, civil_ceremony_date, civil_ceremony_location, ' +
+            'status, google_drive_url, ' +
+            'feast_location, civil_ceremony_date, civil_ceremony_location, ' +
             'religious_ceremony_date, religious_location, custom_ceremony_description, ' +
             'custom_ceremony_description_2, custom_ceremony_date, custom_ceremony_location, ' +
             'guests_quantity, pinterest_board_url) VALUES ?';
@@ -114,7 +143,17 @@ projectsRouter.param('projectId', (req, res, next, projectId) => {
 
 // GET /api/projects/:projectId
 projectsRouter.get('/:projectId', (req, res, next) => {
-  res.status(200).send(req.project);
+  const sql = `SELECT * FROM ProjectUsers WHERE Projects_id=${req.projectId}`;
+  db.query(sql, function(err, users) {
+    if (err) {
+      next(err);
+    } else {
+      couple = users.filter(user => user.type === 'Couple');
+      console.log(couple);
+      req.project.couple = couple;
+      res.status(200).send(req.project);
+    }
+  });
 });
 
 // PUT /api/projects/:projectId
@@ -122,6 +161,8 @@ projectsRouter.put('/:projectId', setDataRequirements, mw.getValues, (req, res, 
   const sql = 'UPDATE Projects SET ' +
               'name= ? , ' +
               'feast_date= ? , ' +
+              'status= ?, ' +
+              'google_drive_url= ?' +
               'feast_location= ? , ' +
               'civil_ceremony_date= ? , ' +
               'civil_ceremony_location= ? , ' +

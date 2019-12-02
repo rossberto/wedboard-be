@@ -20,17 +20,19 @@ projectUsersRouter.get('/', (req, res, next) => {
                 'FROM ProjectUsers ' +
                 'JOIN Users ON ProjectUsers.Users_id = Users.id ' +
                 `) TablaDerivada WHERE TablaDerivada.Projects_id=${req.projectId}`;
-  db.query(sql, function(err, services) {
+  db.query(sql, function(err, users) {
     if (err) {
       next(err);
     } else {
-      res.status(200).send(services);
+      res.status(200).send(users);
     }
   });
 });
 
 // POST /api/projects/:projectId/users
 projectUsersRouter.post('/', (req, res, next) => {
+  console.log('En POST ProjectUsers');
+  console.log(req.body.data.values);
   const sql = `INSERT INTO ProjectUsers (Projects_id, Users_id) VALUES ?`;
   db.query(sql, [req.body.data.values], function(err, result) {
     if (err) {
