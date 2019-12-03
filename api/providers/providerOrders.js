@@ -163,8 +163,11 @@ providerOrdersRouter.param('orderId', (req, res, next, orderId) => {
           } else {
             req.order.services = results[0];
             req.order.project = results[1][0];
-            req.order.payments = results[2];
 
+            if (results[2]) {
+              req.order.payments = results[2];
+            }
+            console.log(results);
             sql = '';
             req.order.services.forEach(service => {
               sql += `SELECT * FROM ProviderServicesImages WHERE ProviderServices_id=${service.ProviderServices_id}; `;
@@ -178,7 +181,7 @@ providerOrdersRouter.param('orderId', (req, res, next, orderId) => {
                 req.order.services.forEach((service, index) => {
                   if (results[0][0]) {
                     service.images = results[index];
-                  } else {
+                  } else if (results.length !== 0){
                     service.images = results;
                   }
                 });

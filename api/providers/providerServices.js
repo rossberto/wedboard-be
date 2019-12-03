@@ -108,10 +108,18 @@ providerServicesRouter.get('/', (req, res, next) => {
         if (err) {
           next(err);
         } else {
-          req.services.forEach((service, index) => {
-            delete service.WedboardServices_id;
-            service.wedboardService = results[index][0];
-          });
+          console.log(results);
+          if (results[0][0]) {
+            req.services.forEach((service, index) => {
+              delete service.WedboardServices_id;
+              service.wedboardService = results[index][0];
+            });
+          } else {
+            delete req.services[0].WedboardServices_id;
+            req.services[0].wedboardService = results[0];
+          }
+
+          console.log(req.services);
           res.status(200).send(req.services);
         }
       });

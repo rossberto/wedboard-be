@@ -21,7 +21,7 @@ servicesRouter.get('/', (req, res, next) => {
     if (err) {
       next(err);
     } else {
-      res.status(200).send({services: services});
+      res.status(200).send(services);
     }
   });
 });
