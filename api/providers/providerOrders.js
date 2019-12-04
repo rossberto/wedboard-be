@@ -108,9 +108,14 @@ providerOrdersRouter.get('/', (req, res, next) => {
         if (err) {
           next(err);
         } else {
-          req.orders.forEach((order, index) => {
-            order.projectName = results[index][0].name;
-          });
+          if (results.length > 1) {
+            req.orders.forEach((order, index) => {
+              order.projectName = results[index][0].name;
+            });
+          } else {
+            req.orders[0].projectName = results[0].name;
+          }
+
           res.status(200).send(req.orders);
         }
       });
@@ -154,20 +159,17 @@ providerOrdersRouter.param('orderId', (req, res, next, orderId) => {
         req.orderId = orderId;
         req.order = order[0];
 
-        sql  = `SELECT * FROM OrderServices WHERE Orders_id=${req.orderId}; `;
+        sql  = `SELECT * FROM OrderServices JOIN ProviderServices ON OrderServices.ProviderServices_id=ProviderServices.id WHERE Orders_id=${req.orderId}; `;
         sql += `SELECT * FROM Projects WHERE id=${req.order.Projects_id}; `;
         sql += `SELECT * FROM Payments WHERE Orders_id=${req.orderId}`
         db.query(sql, function(err, results) {
           if (err) {
             next(err);
           } else {
-            req.order.services = results[0];
-            req.order.project = results[1][0];
+            req.order.services = results[0]; // Es un array
+            req.order.project = results[1][0]; // Es un elemento unico
+            req.order.payments = results[2]; // Es un array que puede ser vacio
 
-            if (results[2]) {
-              req.order.payments = results[2];
-            }
-            console.log(results);
             sql = '';
             req.order.services.forEach(service => {
               sql += `SELECT * FROM ProviderServicesImages WHERE ProviderServices_id=${service.ProviderServices_id}; `;
@@ -177,15 +179,20 @@ providerOrdersRouter.param('orderId', (req, res, next, orderId) => {
               if (err) {
                 next(err);
               } else {
-                console.log(results);
-                req.order.services.forEach((service, index) => {
-                  if (results[0][0]) {
-                    service.images = results[index];
-                  } else if (results.length !== 0){
-                    service.images = results;
-                  }
-                });
-                next();
+                if (results.length > 0) {
+                /*  req.order.services.forEach((service, index) => {
+                    if (results[0][0]) {
+                      console.log('no es vacio');
+                      service.images = results[index];
+                    } else { //if (results.length !== 0){
+                      console.log('es vacio');
+                      service.images = results;
+                    }
+                  });
+                */next();
+                } else {
+                  next();
+                }
               }
             });
           }

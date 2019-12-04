@@ -1,0 +1,25 @@
+1.  Generar Users (Primer usuario debe ser diferente de Planner)                [hecho]
+2.  Generar Providers (JAS: Carpas, MaxiEventos: Banquetes, Quo Vadis: Musica)  [hecho]
+3.  Generar WedboardServices                                                    [hecho]
+4.  Generar ProviderServices                                                    [hecho]
+    /* Proveedor con id:1 - JAS - Carpas */
+      /* WedboardServices_id: 13 - Categoría: Montaje, Servicio: Carpas */
+      /* WedboardServices_id: 21 - Categoría: Necesario de acuerdo a locación, Servicio: Carpa de cocina */
+    /* Proveedor con id: 2 - MaxiEventos - Banquetes */
+  	  /* WedboardServices_id: 3 - Categoría: Recepción, Servicio: Banquete en menú */
+      /* WedboardServices_id: 3 - Categoría: Recepción, Servicio: Banquete en menú */
+      /* WedboardServices_id: 3 - Categoría: Recepción, Servicio: Banquete en menú */
+    /* Proveedor con id: 3 - Quo Vadis - Música */
+  	  /* WedboardServices_id: 14 - Categoría: Entretenimiento, Subcategoría: Música para coctel, Servicio: Audio para música grabada */
+      /* WedboardServices_id: 15 - Categoría: Entretenimiento, Subcategoría: Música para coctel, Servicio: Música en vivo */
+      /* WedboardServices_id: 17 - Categoría: Entretenimiento, Subcategoría: Música para cena, Servicio: Música en vivo*/
+5.  Generar Projects  /*** Se genera directamente con Aplicación Web Wedboard ***/  [hecho]
+6.  Generar Surveys                                                             [hecho]
+7.  Generar ProjectServices                                                     [hecho]
+
+***** Inicia loop de generación por cada ProjectService
+8.  Generar Orders                                                              [hecho]
+9.  Generar OrderServices
+***** Termina loop de generación
+
+10.  Generar Payments
