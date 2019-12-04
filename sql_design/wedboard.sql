@@ -5,19 +5,19 @@ SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
 
 -- -----------------------------------------------------
--- Schema mydb
+-- Schema heroku_0c5078081bd3dc6
 -- -----------------------------------------------------
 
 -- -----------------------------------------------------
--- Schema mydb
+-- Schema heroku_0c5078081bd3dc6
 -- -----------------------------------------------------
-CREATE SCHEMA IF NOT EXISTS `mydb` DEFAULT CHARACTER SET utf8 ;
-USE `mydb` ;
+CREATE SCHEMA IF NOT EXISTS `heroku_0c5078081bd3dc6` DEFAULT CHARACTER SET utf8 ;
+USE `heroku_0c5078081bd3dc6` ;
 
 -- -----------------------------------------------------
--- Table `mydb`.`Users`
+-- Table `heroku_0c5078081bd3dc6`.`Users`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`Users` (
+CREATE TABLE IF NOT EXISTS `heroku_0c5078081bd3dc6`.`Users` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(45) NOT NULL,
   `last_name` VARCHAR(45) NOT NULL,
@@ -39,9 +39,9 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`Projects`
+-- Table `heroku_0c5078081bd3dc6`.`Projects`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`Projects` (
+CREATE TABLE IF NOT EXISTS `heroku_0c5078081bd3dc6`.`Projects` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `creation_timestamp` DATETIME NOT NULL,
   `name` VARCHAR(45) NOT NULL,
@@ -64,16 +64,16 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Projects` (
   INDEX `fk_Projects_Users1_idx` (`created_by` ASC),
   CONSTRAINT `fk_Projects_Users1`
     FOREIGN KEY (`created_by`)
-    REFERENCES `mydb`.`Users` (`id`)
+    REFERENCES `heroku_0c5078081bd3dc6`.`Users` (`id`)
     ON DELETE RESTRICT
     ON UPDATE RESTRICT)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`Surveys`
+-- Table `heroku_0c5078081bd3dc6`.`Surveys`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`Surveys` (
+CREATE TABLE IF NOT EXISTS `heroku_0c5078081bd3dc6`.`Surveys` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `last_modification_timestamp` DATETIME NULL,
   `status` VARCHAR(45) NULL,
@@ -84,61 +84,61 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Surveys` (
   UNIQUE INDEX `Projects_id_UNIQUE` (`Projects_id` ASC),
   CONSTRAINT `fk_Surveys_Projects1`
     FOREIGN KEY (`Projects_id`)
-    REFERENCES `mydb`.`Projects` (`id`)
+    REFERENCES `heroku_0c5078081bd3dc6`.`Projects` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`SurveyBudget`
+-- Table `heroku_0c5078081bd3dc6`.`SurveyBudget`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`SurveyBudget` (
+CREATE TABLE IF NOT EXISTS `heroku_0c5078081bd3dc6`.`SurveyBudget` (
   `id` INT NOT NULL,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`SurveyGuests`
+-- Table `heroku_0c5078081bd3dc6`.`SurveyGuests`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`SurveyGuests` (
+CREATE TABLE IF NOT EXISTS `heroku_0c5078081bd3dc6`.`SurveyGuests` (
   `id` INT NOT NULL,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`PlaceAndDate`
+-- Table `heroku_0c5078081bd3dc6`.`PlaceAndDate`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`PlaceAndDate` (
+CREATE TABLE IF NOT EXISTS `heroku_0c5078081bd3dc6`.`PlaceAndDate` (
   `id` INT NOT NULL,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`Entertainment`
+-- Table `heroku_0c5078081bd3dc6`.`Entertainment`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`Entertainment` (
+CREATE TABLE IF NOT EXISTS `heroku_0c5078081bd3dc6`.`Entertainment` (
   `id` INT NOT NULL,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`InitialStatus`
+-- Table `heroku_0c5078081bd3dc6`.`InitialStatus`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`InitialStatus` (
+CREATE TABLE IF NOT EXISTS `heroku_0c5078081bd3dc6`.`InitialStatus` (
   `id` INT NOT NULL,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`Providers`
+-- Table `heroku_0c5078081bd3dc6`.`Providers`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`Providers` (
+CREATE TABLE IF NOT EXISTS `heroku_0c5078081bd3dc6`.`Providers` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(255) NOT NULL,
   `is_active` TINYINT NOT NULL DEFAULT 0,
@@ -156,9 +156,9 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`Orders`
+-- Table `heroku_0c5078081bd3dc6`.`Orders`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`Orders` (
+CREATE TABLE IF NOT EXISTS `heroku_0c5078081bd3dc6`.`Orders` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `date` DATETIME NOT NULL,
   `status` VARCHAR(8) NOT NULL,
@@ -173,21 +173,21 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Orders` (
   INDEX `fk_Orders_Providers1_idx` (`Providers_id` ASC),
   CONSTRAINT `fk_Orders_Projects1`
     FOREIGN KEY (`Projects_id`)
-    REFERENCES `mydb`.`Projects` (`id`)
+    REFERENCES `heroku_0c5078081bd3dc6`.`Projects` (`id`)
     ON DELETE RESTRICT
     ON UPDATE RESTRICT,
   CONSTRAINT `fk_Orders_Providers1`
     FOREIGN KEY (`Providers_id`)
-    REFERENCES `mydb`.`Providers` (`id`)
+    REFERENCES `heroku_0c5078081bd3dc6`.`Providers` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`WedboardServices`
+-- Table `heroku_0c5078081bd3dc6`.`WedboardServices`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`WedboardServices` (
+CREATE TABLE IF NOT EXISTS `heroku_0c5078081bd3dc6`.`WedboardServices` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `service` VARCHAR(50) NOT NULL,
   `category` VARCHAR(50) NOT NULL,
@@ -197,9 +197,9 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`ProviderServices`
+-- Table `heroku_0c5078081bd3dc6`.`ProviderServices`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`ProviderServices` (
+CREATE TABLE IF NOT EXISTS `heroku_0c5078081bd3dc6`.`ProviderServices` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(255) NOT NULL,
   `description` VARCHAR(255) NOT NULL,
@@ -216,21 +216,21 @@ CREATE TABLE IF NOT EXISTS `mydb`.`ProviderServices` (
   INDEX `fk_ProviderServices_WedboardServices1_idx` (`WedboardServices_id` ASC),
   CONSTRAINT `fk_ProviderServices_Providers1`
     FOREIGN KEY (`Providers_id`)
-    REFERENCES `mydb`.`Providers` (`id`)
+    REFERENCES `heroku_0c5078081bd3dc6`.`Providers` (`id`)
     ON DELETE RESTRICT
     ON UPDATE RESTRICT,
   CONSTRAINT `fk_ProviderServices_WedboardServices1`
     FOREIGN KEY (`WedboardServices_id`)
-    REFERENCES `mydb`.`WedboardServices` (`id`)
+    REFERENCES `heroku_0c5078081bd3dc6`.`WedboardServices` (`id`)
     ON DELETE RESTRICT
     ON UPDATE RESTRICT)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`PlannerUsers`
+-- Table `heroku_0c5078081bd3dc6`.`PlannerUsers`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`PlannerUsers` (
+CREATE TABLE IF NOT EXISTS `heroku_0c5078081bd3dc6`.`PlannerUsers` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `is_current_employee` TINYINT NOT NULL DEFAULT 1,
   `role` VARCHAR(255) NOT NULL,
@@ -239,16 +239,16 @@ CREATE TABLE IF NOT EXISTS `mydb`.`PlannerUsers` (
   UNIQUE INDEX `Users_id_UNIQUE` (`Users_id` ASC),
   CONSTRAINT `fk_PlannerUsers_Users1`
     FOREIGN KEY (`Users_id`)
-    REFERENCES `mydb`.`Users` (`id`)
+    REFERENCES `heroku_0c5078081bd3dc6`.`Users` (`id`)
     ON DELETE CASCADE
     ON UPDATE RESTRICT)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`CoupleUsers`
+-- Table `heroku_0c5078081bd3dc6`.`CoupleUsers`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`CoupleUsers` (
+CREATE TABLE IF NOT EXISTS `heroku_0c5078081bd3dc6`.`CoupleUsers` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `nationality` VARCHAR(3) NULL,
   `residence_country` VARCHAR(45) NULL,
@@ -266,21 +266,21 @@ CREATE TABLE IF NOT EXISTS `mydb`.`CoupleUsers` (
   UNIQUE INDEX `Users_id_UNIQUE` (`Users_id` ASC),
   CONSTRAINT `fk_CoupleUsers_Users1`
     FOREIGN KEY (`Users_id`)
-    REFERENCES `mydb`.`Users` (`id`)
+    REFERENCES `heroku_0c5078081bd3dc6`.`Users` (`id`)
     ON DELETE CASCADE
     ON UPDATE RESTRICT,
   CONSTRAINT `fk_CoupleUsers_Users2`
     FOREIGN KEY (`partner_id`)
-    REFERENCES `mydb`.`Users` (`id`)
+    REFERENCES `heroku_0c5078081bd3dc6`.`Users` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`ProviderUsers`
+-- Table `heroku_0c5078081bd3dc6`.`ProviderUsers`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`ProviderUsers` (
+CREATE TABLE IF NOT EXISTS `heroku_0c5078081bd3dc6`.`ProviderUsers` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `job_position` VARCHAR(255) NULL,
   `email_cc` VARCHAR(45) NULL,
@@ -292,21 +292,21 @@ CREATE TABLE IF NOT EXISTS `mydb`.`ProviderUsers` (
   UNIQUE INDEX `Providers_id_UNIQUE` (`Providers_id` ASC),
   CONSTRAINT `fk_ProviderUsers_Users1`
     FOREIGN KEY (`Users_id`)
-    REFERENCES `mydb`.`Users` (`id`)
+    REFERENCES `heroku_0c5078081bd3dc6`.`Users` (`id`)
     ON DELETE CASCADE
     ON UPDATE RESTRICT,
   CONSTRAINT `fk_ProviderUsers_Providers1`
     FOREIGN KEY (`Providers_id`)
-    REFERENCES `mydb`.`Providers` (`id`)
+    REFERENCES `heroku_0c5078081bd3dc6`.`Providers` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`ProjectServices`
+-- Table `heroku_0c5078081bd3dc6`.`ProjectServices`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`ProjectServices` (
+CREATE TABLE IF NOT EXISTS `heroku_0c5078081bd3dc6`.`ProjectServices` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `quantity` INT NULL,
   `comments` VARCHAR(255) NULL,
@@ -319,21 +319,21 @@ CREATE TABLE IF NOT EXISTS `mydb`.`ProjectServices` (
   INDEX `fk_ProjectServices_WedboardServices1_idx` (`WedboardServices_id` ASC),
   CONSTRAINT `fk_ProjectServices_Projects1`
     FOREIGN KEY (`Projects_id`)
-    REFERENCES `mydb`.`Projects` (`id`)
+    REFERENCES `heroku_0c5078081bd3dc6`.`Projects` (`id`)
     ON DELETE RESTRICT
     ON UPDATE RESTRICT,
   CONSTRAINT `fk_ProjectServices_WedboardServices1`
     FOREIGN KEY (`WedboardServices_id`)
-    REFERENCES `mydb`.`WedboardServices` (`id`)
+    REFERENCES `heroku_0c5078081bd3dc6`.`WedboardServices` (`id`)
     ON DELETE RESTRICT
     ON UPDATE RESTRICT)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`OrderServices`
+-- Table `heroku_0c5078081bd3dc6`.`OrderServices`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`OrderServices` (
+CREATE TABLE IF NOT EXISTS `heroku_0c5078081bd3dc6`.`OrderServices` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `quantity` INT NOT NULL,
   `cost` DECIMAL(10,2) NOT NULL,
@@ -346,26 +346,26 @@ CREATE TABLE IF NOT EXISTS `mydb`.`OrderServices` (
   INDEX `fk_OrderServices_ProviderServices1_idx` (`ProviderServices_id` ASC),
   CONSTRAINT `fk_OrderServices_ProjectServices1`
     FOREIGN KEY (`ProjectServices_id`)
-    REFERENCES `mydb`.`ProjectServices` (`id`)
+    REFERENCES `heroku_0c5078081bd3dc6`.`ProjectServices` (`id`)
     ON DELETE RESTRICT
     ON UPDATE RESTRICT,
   CONSTRAINT `fk_OrderServices_Orders1`
     FOREIGN KEY (`Orders_id`)
-    REFERENCES `mydb`.`Orders` (`id`)
+    REFERENCES `heroku_0c5078081bd3dc6`.`Orders` (`id`)
     ON DELETE RESTRICT
     ON UPDATE RESTRICT,
   CONSTRAINT `fk_OrderServices_ProviderServices1`
     FOREIGN KEY (`ProviderServices_id`)
-    REFERENCES `mydb`.`ProviderServices` (`id`)
+    REFERENCES `heroku_0c5078081bd3dc6`.`ProviderServices` (`id`)
     ON DELETE RESTRICT
     ON UPDATE RESTRICT)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`BudgetDistribution`
+-- Table `heroku_0c5078081bd3dc6`.`BudgetDistribution`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`BudgetDistribution` (
+CREATE TABLE IF NOT EXISTS `heroku_0c5078081bd3dc6`.`BudgetDistribution` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `services` DECIMAL(10,2) NULL,
   `reception` DECIMAL(10,2) NULL,
@@ -386,9 +386,9 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`Payments`
+-- Table `heroku_0c5078081bd3dc6`.`Payments`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`Payments` (
+CREATE TABLE IF NOT EXISTS `heroku_0c5078081bd3dc6`.`Payments` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `paid_amount` DECIMAL(10,2) NOT NULL,
   `payment_date` DATETIME NOT NULL,
@@ -403,16 +403,16 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Payments` (
   INDEX `fk_Payments_Orders1_idx` (`Orders_id` ASC),
   CONSTRAINT `fk_Payments_Orders1`
     FOREIGN KEY (`Orders_id`)
-    REFERENCES `mydb`.`Orders` (`id`)
+    REFERENCES `heroku_0c5078081bd3dc6`.`Orders` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`ProjectBalance`
+-- Table `heroku_0c5078081bd3dc6`.`ProjectBalance`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`ProjectBalance` (
+CREATE TABLE IF NOT EXISTS `heroku_0c5078081bd3dc6`.`ProjectBalance` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `total_budget` DECIMAL(10,2) NULL,
   `paid` DECIMAL(10,2) NULL,
@@ -425,21 +425,21 @@ CREATE TABLE IF NOT EXISTS `mydb`.`ProjectBalance` (
   INDEX `fk_ProjectFinances_BudgetDistribution1_idx` (`BudgetDistribution_id` ASC),
   CONSTRAINT `fk_ProjectFinances_Projects1`
     FOREIGN KEY (`Projects_id`)
-    REFERENCES `mydb`.`Projects` (`id`)
+    REFERENCES `heroku_0c5078081bd3dc6`.`Projects` (`id`)
     ON DELETE RESTRICT
     ON UPDATE RESTRICT,
   CONSTRAINT `fk_ProjectFinances_BudgetDistribution1`
     FOREIGN KEY (`BudgetDistribution_id`)
-    REFERENCES `mydb`.`BudgetDistribution` (`id`)
+    REFERENCES `heroku_0c5078081bd3dc6`.`BudgetDistribution` (`id`)
     ON DELETE RESTRICT
     ON UPDATE RESTRICT)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`ProjectUsers`
+-- Table `heroku_0c5078081bd3dc6`.`ProjectUsers`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`ProjectUsers` (
+CREATE TABLE IF NOT EXISTS `heroku_0c5078081bd3dc6`.`ProjectUsers` (
   `Users_id` INT NOT NULL,
   `Projects_id` INT NOT NULL,
   PRIMARY KEY (`Users_id`, `Projects_id`),
@@ -447,21 +447,21 @@ CREATE TABLE IF NOT EXISTS `mydb`.`ProjectUsers` (
   INDEX `fk_Users_pairs_Projects_Users1_idx` (`Users_id` ASC),
   CONSTRAINT `fk_Users_pairs_Projects_Users1`
     FOREIGN KEY (`Users_id`)
-    REFERENCES `mydb`.`Users` (`id`)
+    REFERENCES `heroku_0c5078081bd3dc6`.`Users` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_Users_pairs_Projects_Projects1`
     FOREIGN KEY (`Projects_id`)
-    REFERENCES `mydb`.`Projects` (`id`)
+    REFERENCES `heroku_0c5078081bd3dc6`.`Projects` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`Todo`
+-- Table `heroku_0c5078081bd3dc6`.`Todo`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`Todo` (
+CREATE TABLE IF NOT EXISTS `heroku_0c5078081bd3dc6`.`Todo` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `title` VARCHAR(45) NOT NULL,
   `due_date` DATETIME NOT NULL,
@@ -482,21 +482,21 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Todo` (
   INDEX `fk_Todo_Users1_idx` (`Users_id` ASC),
   CONSTRAINT `fk_Todo_ProjectServices1`
     FOREIGN KEY (`ProjectServices_id`)
-    REFERENCES `mydb`.`ProjectServices` (`id`)
+    REFERENCES `heroku_0c5078081bd3dc6`.`ProjectServices` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_Todo_Users1`
     FOREIGN KEY (`Users_id`)
-    REFERENCES `mydb`.`Users` (`id`)
+    REFERENCES `heroku_0c5078081bd3dc6`.`Users` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`ProviderServicesImages`
+-- Table `heroku_0c5078081bd3dc6`.`ProviderServicesImages`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`ProviderServicesImages` (
+CREATE TABLE IF NOT EXISTS `heroku_0c5078081bd3dc6`.`ProviderServicesImages` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `image_url` VARCHAR(255) NOT NULL,
   `alt` VARCHAR(45) NOT NULL,
@@ -506,16 +506,16 @@ CREATE TABLE IF NOT EXISTS `mydb`.`ProviderServicesImages` (
   INDEX `fk_ProviderServicesImages_ProviderServices1_idx` (`ProviderServices_id` ASC),
   CONSTRAINT `fk_ProviderServicesImages_ProviderServices1`
     FOREIGN KEY (`ProviderServices_id`)
-    REFERENCES `mydb`.`ProviderServices` (`id`)
+    REFERENCES `heroku_0c5078081bd3dc6`.`ProviderServices` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`ProviderSelection`
+-- Table `heroku_0c5078081bd3dc6`.`ProviderSelection`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`ProviderSelection` (
+CREATE TABLE IF NOT EXISTS `heroku_0c5078081bd3dc6`.`ProviderSelection` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `Orders_id_1` INT NOT NULL,
   `Orders_id_2` INT NOT NULL,
@@ -528,26 +528,26 @@ CREATE TABLE IF NOT EXISTS `mydb`.`ProviderSelection` (
   INDEX `fk_ProviderSelection_Orders3_idx` (`Orders_id_3` ASC),
   CONSTRAINT `fk_ProviderSelection_Orders1`
     FOREIGN KEY (`Orders_id_1`)
-    REFERENCES `mydb`.`Orders` (`id`)
+    REFERENCES `heroku_0c5078081bd3dc6`.`Orders` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_ProviderSelection_Orders2`
     FOREIGN KEY (`Orders_id_2`)
-    REFERENCES `mydb`.`Orders` (`id`)
+    REFERENCES `heroku_0c5078081bd3dc6`.`Orders` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_ProviderSelection_Orders3`
     FOREIGN KEY (`Orders_id_3`)
-    REFERENCES `mydb`.`Orders` (`id`)
+    REFERENCES `heroku_0c5078081bd3dc6`.`Orders` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`Feedback`
+-- Table `heroku_0c5078081bd3dc6`.`Feedback`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`Feedback` (
+CREATE TABLE IF NOT EXISTS `heroku_0c5078081bd3dc6`.`Feedback` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `file_url` VARCHAR(255) NULL,
   `title` VARCHAR(45) NULL,
@@ -560,9 +560,9 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`WeddingConceptSection`
+-- Table `heroku_0c5078081bd3dc6`.`WeddingConceptSection`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`WeddingConceptSection` (
+CREATE TABLE IF NOT EXISTS `heroku_0c5078081bd3dc6`.`WeddingConceptSection` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `answer_1` VARCHAR(255) NULL,
   `answer_2` VARCHAR(255) NULL,
@@ -584,16 +584,16 @@ CREATE TABLE IF NOT EXISTS `mydb`.`WeddingConceptSection` (
   UNIQUE INDEX `Surveys_id_UNIQUE` (`Surveys_id` ASC),
   CONSTRAINT `fk_WeddingConceptSection_Surveys1`
     FOREIGN KEY (`Surveys_id`)
-    REFERENCES `mydb`.`Surveys` (`id`)
+    REFERENCES `heroku_0c5078081bd3dc6`.`Surveys` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`BudgetSection`
+-- Table `heroku_0c5078081bd3dc6`.`BudgetSection`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`BudgetSection` (
+CREATE TABLE IF NOT EXISTS `heroku_0c5078081bd3dc6`.`BudgetSection` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `answer_1_budget` DECIMAL(10,2) NULL,
   `answer_2` VARCHAR(255) NULL,
@@ -604,16 +604,16 @@ CREATE TABLE IF NOT EXISTS `mydb`.`BudgetSection` (
   UNIQUE INDEX `Surveys_id_UNIQUE` (`Surveys_id` ASC),
   CONSTRAINT `fk_BudgetSection_Surveys1`
     FOREIGN KEY (`Surveys_id`)
-    REFERENCES `mydb`.`Surveys` (`id`)
+    REFERENCES `heroku_0c5078081bd3dc6`.`Surveys` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`GuestsSection`
+-- Table `heroku_0c5078081bd3dc6`.`GuestsSection`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`GuestsSection` (
+CREATE TABLE IF NOT EXISTS `heroku_0c5078081bd3dc6`.`GuestsSection` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `answer_1` VARCHAR(255) NULL,
   `answer_2_guests_qty` INT NULL,
@@ -624,16 +624,16 @@ CREATE TABLE IF NOT EXISTS `mydb`.`GuestsSection` (
   UNIQUE INDEX `Surveys_id_UNIQUE` (`Surveys_id` ASC),
   CONSTRAINT `fk_GuestsSection_Surveys1`
     FOREIGN KEY (`Surveys_id`)
-    REFERENCES `mydb`.`Surveys` (`id`)
+    REFERENCES `heroku_0c5078081bd3dc6`.`Surveys` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`CeremonySection`
+-- Table `heroku_0c5078081bd3dc6`.`CeremonySection`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`CeremonySection` (
+CREATE TABLE IF NOT EXISTS `heroku_0c5078081bd3dc6`.`CeremonySection` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `answer_1_religious` TINYINT NULL,
   `answer_1_legal` TINYINT NULL,
@@ -652,16 +652,16 @@ CREATE TABLE IF NOT EXISTS `mydb`.`CeremonySection` (
   UNIQUE INDEX `Surveys_id_UNIQUE` (`Surveys_id` ASC),
   CONSTRAINT `fk_CeremonySection_Surveys1`
     FOREIGN KEY (`Surveys_id`)
-    REFERENCES `mydb`.`Surveys` (`id`)
+    REFERENCES `heroku_0c5078081bd3dc6`.`Surveys` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`WeddingDaySection`
+-- Table `heroku_0c5078081bd3dc6`.`WeddingDaySection`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`WeddingDaySection` (
+CREATE TABLE IF NOT EXISTS `heroku_0c5078081bd3dc6`.`WeddingDaySection` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `answer_1` VARCHAR(255) NULL,
   `answer_2` VARCHAR(255) NULL,
@@ -678,16 +678,16 @@ CREATE TABLE IF NOT EXISTS `mydb`.`WeddingDaySection` (
   UNIQUE INDEX `Surveys_id_UNIQUE` (`Surveys_id` ASC),
   CONSTRAINT `fk_WeddingDaySection_Surveys1`
     FOREIGN KEY (`Surveys_id`)
-    REFERENCES `mydb`.`Surveys` (`id`)
+    REFERENCES `heroku_0c5078081bd3dc6`.`Surveys` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`AmbientSection`
+-- Table `heroku_0c5078081bd3dc6`.`AmbientSection`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`AmbientSection` (
+CREATE TABLE IF NOT EXISTS `heroku_0c5078081bd3dc6`.`AmbientSection` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `answer_1` VARCHAR(255) NULL,
   `answer_2` VARCHAR(255) NULL,
@@ -700,16 +700,16 @@ CREATE TABLE IF NOT EXISTS `mydb`.`AmbientSection` (
   UNIQUE INDEX `Surveys_id_UNIQUE` (`Surveys_id` ASC),
   CONSTRAINT `fk_AmbientSection_Surveys1`
     FOREIGN KEY (`Surveys_id`)
-    REFERENCES `mydb`.`Surveys` (`id`)
+    REFERENCES `heroku_0c5078081bd3dc6`.`Surveys` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`EntertainmentSection`
+-- Table `heroku_0c5078081bd3dc6`.`EntertainmentSection`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`EntertainmentSection` (
+CREATE TABLE IF NOT EXISTS `heroku_0c5078081bd3dc6`.`EntertainmentSection` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `answer_1` VARCHAR(255) NULL,
   `answer_2` VARCHAR(255) NULL,
@@ -721,16 +721,16 @@ CREATE TABLE IF NOT EXISTS `mydb`.`EntertainmentSection` (
   UNIQUE INDEX `Surveys_id_UNIQUE` (`Surveys_id` ASC),
   CONSTRAINT `fk_EntertainmentSection_Surveys1`
     FOREIGN KEY (`Surveys_id`)
-    REFERENCES `mydb`.`Surveys` (`id`)
+    REFERENCES `heroku_0c5078081bd3dc6`.`Surveys` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`FinalSection`
+-- Table `heroku_0c5078081bd3dc6`.`FinalSection`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`FinalSection` (
+CREATE TABLE IF NOT EXISTS `heroku_0c5078081bd3dc6`.`FinalSection` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `answer_1` VARCHAR(255) NULL,
   `answer_2` VARCHAR(255) NULL,
@@ -740,16 +740,16 @@ CREATE TABLE IF NOT EXISTS `mydb`.`FinalSection` (
   UNIQUE INDEX `Surveys_id_UNIQUE` (`Surveys_id` ASC),
   CONSTRAINT `fk_FinalSection_Surveys1`
     FOREIGN KEY (`Surveys_id`)
-    REFERENCES `mydb`.`Surveys` (`id`)
+    REFERENCES `heroku_0c5078081bd3dc6`.`Surveys` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`CeremonyServices`
+-- Table `heroku_0c5078081bd3dc6`.`CeremonyServices`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`CeremonyServices` (
+CREATE TABLE IF NOT EXISTS `heroku_0c5078081bd3dc6`.`CeremonyServices` (
   `id` INT NOT NULL,
   `ceremony_church` TINYINT NULL DEFAULT 0,
   `same_event_location` TINYINT NULL DEFAULT 0,
@@ -777,14 +777,14 @@ CREATE TABLE IF NOT EXISTS `mydb`.`CeremonyServices` (
   PRIMARY KEY (`id`))
 ENGINE = InnoDB;
 
-USE `mydb` ;
+USE `heroku_0c5078081bd3dc6` ;
 
 -- -----------------------------------------------------
 --  routine1
 -- -----------------------------------------------------
 
 DELIMITER $$
-USE `mydb`$$
+USE `heroku_0c5078081bd3dc6`$$
 $$
 
 DELIMITER ;
