@@ -6,33 +6,18 @@ const mysql = require('mysql');
 
 const connection = mysql.createPool({
   multipleStatements: true,
-  host    : 'us-cdbr-iron-east-05.cleardb.net',  
-  user    : 'b7711e16555096',
-  password: '55792152',
-  database: 'heroku_0c5078081bd3dc6'
+  host    : 'us-cdbr-iron-east-05.cleardb.net',   //'localhost',
+  user    : 'b7711e16555096',                     //'root',
+  password: '55792152',                           //'contrasena',
+  database: 'heroku_0c5078081bd3dc6'              //'mydb'
 });
 
-connection.getConnection(function(err, connection) {
-  if (err) throw err;
-
-  console.log("Connected!");
-});
-
-/* For Local Environment */
 /*
-const connection = mysql.createPool({
-  multipleStatements: true,
-  host    : 'localhost',
-  user    : 'root',
-  password: 'contrasena',
-  database: 'mydb'
-});
-
-//connection.connect(function(err) {
 connection.getConnection(function(err, connection) {
   if (err) throw err;
 
   console.log("Connected!");
 });
 */
+
 module.exports = connection;
