@@ -8,6 +8,7 @@
 */
 const express = require('express');
 const db = require('../../db/database');
+const sendInvitation = require('./invitation');
 
 // User's Middleware
 const mw = require('../middleware');
@@ -85,6 +86,7 @@ usersRouter.post('/', setDataRequirements, mw.validatePostRequest, mw.getValues,
         if (err) {
           next(err);
         } else {
+          sendInvitation(insertedUser[0].email, insertedUser[0].type);
           res.status(201).send({user: insertedUser[0]});
         }
       });
