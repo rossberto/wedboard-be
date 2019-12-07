@@ -8,7 +8,7 @@ const cors = require('cors');
 const errorhandler = require('errorhandler');
 const morgan = require('morgan');
 
-const PORT = process.env.PORT || 3306; // For localhost: 4000;
+const PORT = process.env.PORT || 4000; // For localhost: 4000; / For Heroku server: 3306
 
 const apiRouter = require('./api/api');
 
