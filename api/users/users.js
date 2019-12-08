@@ -23,8 +23,7 @@ function setDataRequirements(req, res, next) {
     'name',
     'last_name',
     'email',
-    'type',
-    'join_date'
+    'type'
   ];
 
   req.expectedPostData = [
@@ -33,7 +32,6 @@ function setDataRequirements(req, res, next) {
     'last_name_2',
     'email',
     'type',
-    'join_date',
     'birthdate',
     'gender',
     'phone',
@@ -75,7 +73,7 @@ usersRouter.get('/', (req, res, next) => {
 // POST /api/users
 usersRouter.post('/', setDataRequirements, mw.validatePostRequest, mw.getValues, (req, res, next) => {
   let sql = 'INSERT INTO Users (name, last_name, last_name_2, email, ' +
-            'type, join_date, birthdate, gender, phone, ' +
+            'type, birthdate, gender, phone, ' +
             'token, is_online, is_forbidden) VALUES ?';
   db.query(sql, [req.values], function(err, result, fields) {
     if (err) {
