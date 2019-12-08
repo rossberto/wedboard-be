@@ -1,10 +1,7 @@
-/***** Users Routes *****/
+/***** Auth Routes *****/
 /*
-    GET /api/users
-    POST /api/users
-    GET /api/users/:userId
-    PUT /api/users/:userId
-    DELETE /api/users/:userId
+    POST /api/auth
+    POST /api/auth/register
 */
 const express = require('express');
 const jwt = require('jsonwebtoken');
@@ -22,22 +19,27 @@ const jwtConfig = {
 
 // Local Middleware
 function setDataRequirements(req, res, next) {
-  console.log(req.params);
+  console.log(req.body);
 
   req.minimumRequestData = [
+    'password',
+    'email'
   ];
 
   req.expectedPostData = [
+    'password',
+    'email'
   ];
 
   req.expectedUpdateData = [
+
   ];
 
   next();
 }
 
 /***** User Routes *****/
-// GET /api/users
+// GET /api/auth
 authRouter.post('/', (req, res, next) => {
   console.log('Checando credenciales');
   console.log(req.body);
@@ -86,28 +88,50 @@ console.log(response);
     }
   });
 });
-/*
-// POST /api/users
-usersRouter.post('/', setDataRequirements, mw.validatePostRequest, mw.getValues, (req, res, next) => {
-  let sql = 'INSERT INTO Users (name, last_name, last_name_2, email, ' +
-            'type, join_date, birthdate, gender, phone, ' +
-            'token, is_online, is_forbidden) VALUES ?';
-  db.query(sql, [req.values], function(err, result, fields) {
+
+// POST /api/auth/register
+authRouter.post('/register', setDataRequirements, mw.validatePostRequest, mw.getValues, (req, res, next) => {
+  let sql = `UPDATE Users SET password="${req.body.data.password}" WHERE email="${req.body.data.email}" `;
+  db.query(sql, function(err, result) {
     if (err) {
       next(err);
     } else {
-      sql = 'SELECT * FROM Users WHERE id= ? LIMIT 1';
-      db.query(sql, [result.insertId], function(err, insertedUser) {
+      sql = `SELECT * FROM Users WHERE email="${req.body.data.email}" LIMIT 1`;
+      console.log(sql);
+      db.query(sql, function(err, user) {
         if (err) {
           next(err);
         } else {
-          res.status(201).send({user: insertedUser[0]});
+          console.log(user);
+          if (user.length > 0) {
+            const access_token = jwt.sign({id: user.id}, jwtConfig.secret, {expiresIn: jwtConfig.expiresIn});
+
+            const response = {
+                "user"        : user[0],
+                "access_token": access_token
+            };
+
+            const displayName = user[0].name + ' ' + user[0].last_name + ' ' + user[0].last_name_2;
+            response.user.data = {};
+            response.user.data['photoURL'] = user[0].profile_img_url;
+            response.user.data['displayName'] = displayName;
+            response.user.data['email'] = user[0].email;
+            response.user.role = user[0].type;
+
+            res.status(201).send(response);
+          } else {
+            const error = {
+                email      : 'Correo no dado de alta',
+                password   : null
+            };
+            res.status(200).send({error});
+          }
         }
       });
     }
   });
 });
-
+/*
 usersRouter.param('userId', (req, res, next, userId) => {
   const sql = `SELECT * FROM Users WHERE id=${userId}`;
   db.query(sql, function(err, user) {
