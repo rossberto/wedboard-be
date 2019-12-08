@@ -21,7 +21,6 @@ function setDataRequirements(req, res, next) {
 
   req.minimumRequestData = [
     'name',
-    'last_name',
     'email',
     'type'
   ];
