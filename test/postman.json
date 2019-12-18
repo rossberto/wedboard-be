@@ -181,3 +181,35 @@
 	"image_url": "assets/images/ecommerce/lago-di-sorapis.jpg",
 	"alt": "Image link broken"
 }
+
+// POST User todos
+{
+	"data": {
+		"title": "Titulo de todo",
+		"notes": "Notas de todo",
+		"start_date": "2018-05-05",
+		"due_date": "2018-06-06",
+		"type": "Confirmation",
+		"status": "Pending",
+		"action_url": "http://www.google.com",
+		"important": 0,
+		"ProjectServices_id": 1
+	}
+}
+
+// PUT User todos
+{
+	"data": {
+		"title": "Titulo editado",
+		"notes": "Notas editadas",
+		"start_date": "2018-05-04",
+		"due_date": "2018-06-07",
+		"type": "Confirmation",
+		"status": "Testing",
+		"action_url": "http://www.facebook.com",
+		"completed_date": "2018-05-06",
+		"completed": 1,
+		"starred": 0,
+		"important": 1,
+	}
+}

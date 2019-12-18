@@ -162,4 +162,7 @@ usersRouter.delete('/:userId', (req, res, next) => {
 const userDetailsRouter = require('./userDetails');
 usersRouter.use('/:userId/details', userDetailsRouter);
 
+const userTodosRouter = require('./userTodos');
+usersRouter.use('/:userId/todos', userTodosRouter);
+
 module.exports = usersRouter;

@@ -57,24 +57,15 @@ projectServicesRouter.get('/', (req, res, next) => {
 });
 
 // POST /api/projects/:projectId/services
-projectServicesRouter.post('/', setDataRequirements, mw.validatePostRequest, mw.getValues, (req, res, next) => {
-  req.values[0].push(req.projectId);
+projectServicesRouter.post('/', (req, res, next) => {
+  const data = req.body.data;
 
-  let sql = 'INSERT INTO ProjectServices (WedboardServices_id, ' +
-            'quantity, comments, comments_2, Projects_id) VALUES ?';
-  db.query(sql, [req.values], function(err, result) {
-    console.log(sql);
+  let sql = 'INSERT INTO ProjectServices (WedboardServices_id, Projects_id) VALUES ?';
+  db.query(sql, [data], function(err, result) {
     if (err) {
       next(err);
     } else {
-      sql = 'SELECT * FROM ProjectServices WHERE id= ? LIMIT 1';
-      db.query(sql, [result.insertId], function(err, insertedService) {
-        if (err) {
-          next(err);
-        } else {
-          res.status(201).send({project: insertedService[0]});
-        }
-      });
+      res.status(201).send(result.message);
     }
   });
 });
@@ -103,7 +94,6 @@ projectServicesRouter.get('/:serviceId', (req, res, next) => {
 // PUT /api/projects/:projectId/services/:serviceId
 projectServicesRouter.put('/:serviceId', setDataRequirements, mw.getValues, (req, res, next) => {
   const sql = 'UPDATE ProjectServices SET ' +
-              'WedboardServices_id= ? , ' +
               'quantity= ? , ' +
               'comments= ? , ' +
               'comments_2= ? ' +
