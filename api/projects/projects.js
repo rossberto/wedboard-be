@@ -202,4 +202,7 @@ projectsRouter.use('/:projectId/orders', ordersRouter);
 const projectUsersRouter = require('./projectUsers');
 projectsRouter.use('/:projectId/users', projectUsersRouter);
 
+const projectTodosRouter = require('./projectTodos');
+projectsRouter.use('/:projectId/todos', projectTodosRouter);
+
 module.exports = projectsRouter;
