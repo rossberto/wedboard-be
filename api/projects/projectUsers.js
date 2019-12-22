@@ -33,7 +33,7 @@ projectUsersRouter.get('/', (req, res, next) => {
 projectUsersRouter.post('/', (req, res, next) => {
   console.log('En POST ProjectUsers');
   console.log(req.body.data.values);
-  const sql = `INSERT INTO ProjectUsers (Projects_id, Users_id) VALUES ?`;
+  const sql = `INSERT INTO ProjectUsers (Projects_id, Users_id, role) VALUES ?`;
   db.query(sql, [req.body.data.values], function(err, result) {
     if (err) {
       next(err);
