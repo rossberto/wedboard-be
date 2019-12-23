@@ -39,24 +39,21 @@ projectTodosRouter.get('/', (req, res, next) => {
 */
 // POST /api/projects/:projectId/todos/initial-todos
 projectTodosRouter.post('/initial-todos', (req, res, next) => {
-  console.log('En POST ProjectUsers');
   const coupleId = req.body.data.coupleId;
   const today = new Date();
 
   const values = [
     [initialTodos[0].title, today, addDays(today, initialTodos[0].dueDaysOffset), `/apps/dashboards/project/${req.projectId}`, 'Initial', coupleId],
     [initialTodos[1].title, today, addDays(today, initialTodos[1].dueDaysOffset), `/apps/survey/${req.projectId}`, 'Initial', coupleId],
-    [initialTodos[2].title, today, addDays(today, initialTodos[2].dueDaysOffset), `/apps/checklist/${req.projectId}`, 'Initial', coupleId],
+    [initialTodos[2].title, today, addDays(today, initialTodos[2].dueDaysOffset), `/apps/project/${req.projectId}/checklist`, 'Initial', coupleId],
     [initialTodos[3].title, today, addDays(today, initialTodos[3].dueDaysOffset), `/apps/dashboards/project/${req.projectId}`, 'Initial', coupleId],
   ];
 
-  console.log(values);
   const sql = `INSERT INTO Todos (title, start_date, due_date, action_url, type, Users_id) VALUES ?`;
   db.query(sql, [values], function(err, result) {
     if (err) {
       next(err);
     } else {
-      console.log('Number of inserted records: ' + result.affectedRows);
       res.status(201).send();
     }
   });
