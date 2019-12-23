@@ -205,4 +205,7 @@ projectsRouter.use('/:projectId/users', projectUsersRouter);
 const projectTodosRouter = require('./projectTodos');
 projectsRouter.use('/:projectId/todos', projectTodosRouter);
 
+const projectSurveyRouter = require('./projectSurvey');
+projectsRouter.use('/:projectId/survey', projectSurveyRouter);
+
 module.exports = projectsRouter;
