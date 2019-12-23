@@ -78,13 +78,11 @@ projectsRouter.get('/', (req, res, next) => {
         for (let i=0; i<projects.length; i++) {
           sql += `SELECT Users_id, name, type FROM ProjectUsers JOIN Users ON ProjectUsers.Users_id=Users.id WHERE Projects_id=${projects[i].id} AND type='Couple'; `;
         }
-        console.log(sql);
 
         db.query(sql, function(err, results) {
           if (err) {
             next(err);
           } else {
-            console.log(results);
             if (results[0][0]) {
               projects.forEach((project, index) => {
                 project.couple = results[index];

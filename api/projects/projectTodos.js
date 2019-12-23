@@ -59,4 +59,43 @@ projectTodosRouter.post('/initial-todos', (req, res, next) => {
   });
 });
 
+projectTodosRouter.param('todoId', (req, res, next, todoId) => {
+  const sql = `SELECT * FROM Todos WHERE id=${todoId}`;
+  db.query(sql, function(err, todo) {
+    console.log('en todo param');
+    console.log(todo);
+    if (err) {
+      next(err);
+    } else if (todo[0]) {
+      req.todoId = todoId;
+      req.todo = todo[0];
+      next();
+    } else {
+      res.status(404).send();
+    }
+  });
+});
+
+// POST /api/projects/:projectId/todos/:todoId/completed
+projectTodosRouter.put('/:todoId/completed', (req, res, next) => {
+  const today = new Date();  //req.body.completedDate;
+  let sql = `UPDATE Todos SET completed=1, completed_date=? WHERE id=${req.todoId}`;
+  db.query(sql, [today], function(err, result) {
+    if (err) {
+      next(err);
+    } else {
+      sql = `SELECT * FROM Todos WHERE id=${req.todoId} LIMIT 1`;
+      db.query(sql, function(err, todo) {
+        if (err) {
+          next(err);
+        } else {
+          console.log('deberia actualizarse todo');
+          console.log(todo[0]);
+          res.status(200).send(todo[0]);
+        }
+      });
+    }
+  });
+});
+
 module.exports = projectTodosRouter;
