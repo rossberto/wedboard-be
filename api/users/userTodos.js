@@ -57,6 +57,7 @@ userTodosRouter.get('/', (req, res, next) => {
   });
 });
 
+/*
 // POST /api/users/:userId/todos
 userTodosRouter.post('/', setDataRequirements, mw.validatePostRequest, mw.getValues, (req, res, next) => {
   req.values[0].push(req.userId);
@@ -131,4 +132,5 @@ userTodosRouter.delete('/:todoId', (req, res, next) => {
   });
 });
 
+*/
 module.exports = userTodosRouter;
