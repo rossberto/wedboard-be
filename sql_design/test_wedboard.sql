@@ -4,7 +4,7 @@
 /******************************************************************************************/
 /******************************************************************************************/
 INSERT INTO Users (name, last_name, last_name_2, email, type, join_date, birthdate, gender, phone) 
-VALUES ("John", "Doe", "Martinez", "john@correo.com", "Provider", "2019-05-05", "1983-09-09", "Masculino", "+529999987654");
+VALUES ("John", "Doe", "Martinez", "john@correo.com", "Admin", "2019-05-05", "1983-09-09", "Masculino", "+529999987654");
 
 INSERT INTO Users (name, last_name, last_name_2, email, type, join_date, birthdate, gender, phone) 
 VALUES ("Pedro", "Almodovar", "Gonzalez", "pedro@correo.com", "Planner", "2019-05-05", "1981-07-01", "Masculino", "+529999987654");

@@ -117,7 +117,15 @@ authRouter.post('/register', setDataRequirements, mw.validatePostRequest, mw.get
                 "access_token": access_token
             };
 
-            const displayName = user[0].name + ' ' + user[0].last_name + ' ' + user[0].last_name_2;
+            let displayName = user[0].name;
+            if (user[0].last_name !== null) {
+              displayName += ' ' + user[0].last_name;
+            }
+            if (user[0].last_name_2 !== null) {
+              displayName += ' ' + user[0].last_name_2;
+            }
+
+            //const displayName = user[0].name + ' ' + user[0].last_name + ' ' + user[0].last_name_2;
             response.user.data = {};
             response.user.data['photoURL'] = user[0].profile_img_url;
             response.user.data['displayName'] = displayName;
