@@ -40,7 +40,6 @@ function setDataRequirements(req, res, next) {
 
 // GET /api/projects/:projectId/services
 projectServicesRouter.get('/', (req, res, next) => {
-  //const sql = `SELECT * FROM ProjectServices WHERE Projects_id=${req.projectId}` ;
   const sql = 'SELECT * FROM (' +
 	               'SELECT Projects_id, ProjectServices.id AS ProjectServices_id, category, service , ' +
                  'quantity, comments, comments_2 ' +
@@ -103,7 +102,6 @@ projectServicesRouter.put('/:serviceId', setDataRequirements, mw.getValues, (req
   // We take out non-modifiable values
   // Quit projectId
   values.splice(4,1);
-  console.log(values);
 
   db.query(sql, values, function(err) {
     if (err) {

@@ -1,3 +1,9 @@
+/*
+      GET /api/services
+      POST /api/services
+      GET /api/services/:serviceId
+      PUT /api/services/:serviceId
+*/
 const express = require('express');
 const db = require('../../db/database');
 
@@ -15,6 +21,7 @@ function validateService(req, res, next) {
 }
 
 /***** services Routes *****/
+// GET /api/services
 servicesRouter.get('/', (req, res, next) => {
   const sql = 'SELECT * FROM WedboardServices';
   db.query(sql, function(err, services) {
@@ -26,6 +33,7 @@ servicesRouter.get('/', (req, res, next) => {
   });
 });
 
+// POST /api/services
 servicesRouter.post('/', validateService, (req, res, next) => {
   const values = [[req.body.service.service, req.body.service.category]];
 
@@ -61,10 +69,12 @@ servicesRouter.param('serviceId', (req, res, next, serviceId) => {
   });
 });
 
+// GET /api/services/:serviceId
 servicesRouter.get('/:serviceId', (req, res, next) => {
   res.status(200).send({service: req.service});
 });
 
+// PUT /api/services/:serviceId
 servicesRouter.put('/:serviceId', validateService, (req, res, next) => {
   const sql = 'UPDATE WedboardServices SET ' +
               'service= ? , ' +

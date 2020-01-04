@@ -163,7 +163,7 @@ surveysRouter.get('/:surveyId', (req, res, next) => {
 
 // POST /api/surveys/:surveyId
 surveysRouter.post('/:surveyId', validateSection, setDataRequirements, mw.validatePostRequest, (req, res, next) => {
-  delete req.body.data.id;
+  delete req.body.data.id;  // id will be generated with autoincrement
   req.body.data.Surveys_id = req.surveyId;
 
   const sql = `INSERT INTO ${req.body.section} SET ?`
@@ -171,7 +171,6 @@ surveysRouter.post('/:surveyId', validateSection, setDataRequirements, mw.valida
     if (err) {
       next(err);
     } else {
-      console.log(insertedSection);
       res.status(201).send(insertedSection[0]);
     }
   });
@@ -179,7 +178,6 @@ surveysRouter.post('/:surveyId', validateSection, setDataRequirements, mw.valida
 
 // PUT /api/surveys/:surveyId
 surveysRouter.put('/:surveyId',validateSection, setDataRequirements, mw.validatePostRequest, (req, res, next) => {
-  console.log(req.sectionIdColumn);
   db.query(`UPDATE ${req.body.section} SET ? WHERE ${req.sectionIdColumn}=${req.surveyId}`, req.body.data, function(err, result) {
     if (err) {
       next(err);

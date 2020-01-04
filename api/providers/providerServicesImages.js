@@ -1,3 +1,7 @@
+/*
+      GET /api/providers/:providerId/services/:serviceId/images
+      POST /api/providers/:providerId/services/:serviceId/images
+*/
 const express = require('express');
 const db = require('../../db/database');
 

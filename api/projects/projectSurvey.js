@@ -1,7 +1,7 @@
 /***** Project Users Routes *****/
 /*
-    GET /api/projects/:projectId/users
-    POST /api/projects/:projectId/users
+    GET /api/projects/:projectId/survey
+    POST /api/projects/:projectId/survey
 */
 const express = require('express');
 const db = require('../../db/database');
@@ -11,24 +11,7 @@ const mw = require('../middleware');
 
 const projectSurveyRouter = express.Router();
 
-/***** project Routes *****/
-/*
-// GET /api/projects/:projectId/survey
-projectSurveyRouter.get('/', (req, res, next) => {
-  const sql = 'SELECT * FROM Surveys WHERE(' +
-                'SELECT Projects_id, name, last_name, last_name_2, email, type, phone, Users_id ' +
-                'FROM ProjectUsers ' +
-                'JOIN Users ON ProjectUsers.Users_id = Users.id ' +
-                `) TablaDerivada WHERE TablaDerivada.Projects_id=${req.projectId}`;
-  db.query(sql, function(err, users) {
-    if (err) {
-      next(err);
-    } else {
-      res.status(200).send(users);
-    }
-  });
-});
-*/
+/***** Project's Survey Routes *****/
 
 // GET /api/projects/:projectId/survey
 projectSurveyRouter.get('/', (req, res, next) => {
@@ -39,7 +22,6 @@ projectSurveyRouter.get('/', (req, res, next) => {
     } else if (survey.length > 0) {
       req.surveyId = survey[0].id;
       req.survey = survey[0];
-      console.log(survey[0]);
 
       if (survey[0].active_step > 0) {
         const sections = [
@@ -51,7 +33,7 @@ projectSurveyRouter.get('/', (req, res, next) => {
         for (let i=0; i<req.survey.active_step; i++) {
           sectionsSql += `SELECT * FROM ${sections[i]} WHERE Surveys_id=${req.surveyId}; `
         }
-        console.log(sectionsSql);
+
         db.query(sectionsSql, function(err, results) {
           if (err) {
             next(err);
@@ -85,7 +67,6 @@ projectSurveyRouter.post('/', (req, res, next) => {
     } else {
       const surveyId = result.insertId;
 
-      console.log('Number of inserted records: ' + result.affectedRows);
       res.status(201).send({surveyId: result.insertId});
     }
   });

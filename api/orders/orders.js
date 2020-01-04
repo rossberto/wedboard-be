@@ -1,7 +1,10 @@
-/***** Projects Routes *****/
+/***** Orders Routes *****/
 /*
     GET /api/projects/:projectId/orders
     POST /api/projects/:projectId/orders
+    GET /api/projects/:projectId/orders/:orderId
+    PUT /api/projects/:projectId/orders/:orderId
+    DELETE /api/projects/:projectId/orders/:orderId
 */
 const express = require('express');
 const db = require('../../db/database');
@@ -35,7 +38,6 @@ function setDataRequirements(req, res, next) {
 
 // GET /api/projects/:projectId/orders
 ordersRouter.get('/', (req, res, next) => {
-  console.log('En GET orders');
   const sql = `SELECT * FROM Orders WHERE Projects_id=${req.projectId}`;
   db.query(sql, function(err, projects) {
     if (err) {
@@ -88,7 +90,6 @@ ordersRouter.param('orderId', (req, res, next, orderId) => {
 ordersRouter.get('/:orderId', (req, res, next) => {
   const sql = `SELECT * FROM OrderServices WHERE Orders_id=${req.orderId}`;
   db.query(sql, function(err, services) {
-    console.log(services);
     if (err) {
       next(err);
     } else {
@@ -97,7 +98,6 @@ ordersRouter.get('/:orderId', (req, res, next) => {
       res.status(200).send(res.order);
     }
   });
-  //res.status(200).send({order: req.order});
 });
 
 // PUT /api/projects/:projectId/orders/:orderId

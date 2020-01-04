@@ -1,7 +1,7 @@
 /***** Project Users Routes *****/
 /*
-    GET /api/projects/:projectId/todos
-    POST /api/projects/:projectId/todos
+    POST /api/projects/:projectId/todos/initial-todos
+    POST /api/projects/:projectId/todos/:todoId/completed
 */
 const express = require('express');
 const db = require('../../db/database');
@@ -20,23 +20,7 @@ function addDays(date, days) {
 const projectTodosRouter = express.Router();
 
 /***** project Routes *****/
-/*
-// GET /api/projects/:projectId/users
-projectTodosRouter.get('/', (req, res, next) => {
-  const sql = 'SELECT * FROM (' +
-                'SELECT Projects_id, name, last_name, last_name_2, email, type, phone, Users_id ' +
-                'FROM ProjectUsers ' +
-                'JOIN Users ON ProjectUsers.Users_id = Users.id ' +
-                `) TablaDerivada WHERE TablaDerivada.Projects_id=${req.projectId}`;
-  db.query(sql, function(err, users) {
-    if (err) {
-      next(err);
-    } else {
-      res.status(200).send(users);
-    }
-  });
-});
-*/
+
 // POST /api/projects/:projectId/todos/initial-todos
 projectTodosRouter.post('/initial-todos', (req, res, next) => {
   const coupleId = req.body.data.coupleId;

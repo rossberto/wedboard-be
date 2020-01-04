@@ -145,15 +145,6 @@ usersRouter.delete('/:userId', (req, res, next) => {
     if (err) {
       next(err);
     } else {
-      /*
-      db.query(`SELECT * FROM Users WHERE id=${req.userId}`, function(err, user) {
-        if (err) {
-          next(err);
-        } else {
-          res.status(200).send({user: user[0]});
-        }
-      });
-      */
       res.status(204).send();
     }
   });

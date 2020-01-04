@@ -1,3 +1,10 @@
+/*
+      GET /api/providers
+      POST /api/providers
+      GET /api/providers/:providerId
+      PUT /api/providers/:providerId
+      DELETE /api/providers/:providerId
+*/
 const express = require('express');
 const db = require('../../db/database');
 
